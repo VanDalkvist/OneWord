@@ -1,6 +1,6 @@
 // todo: get rid of 'starter.services'
 
-angular.module('one-word', ['ionic', 'starter.services'])
+angular.module('one-word', ['ionic', 'one-word.words'])
 
     .run(function ($ionicPlatform) {
         $ionicPlatform.ready(function () {

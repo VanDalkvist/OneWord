@@ -3,9 +3,9 @@
 
     app.controller("WordCtrl", Controller);
 
-    Controller.$inject = ['word'];
+    Controller.$inject = ['WordService'];
 
-    function Controller(word) {
+    function Controller(WordService) {
 
         // initialization
 
@@ -13,7 +13,7 @@
 
         // model
 
-        vm.model = word;
+        vm.model = WordService.current();
 
         // public functions
 
