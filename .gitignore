@@ -3,6 +3,7 @@
 
 platforms/
 plugins/
+!plugins/index.js
 www/lib/
 
 ### JetBrains template
