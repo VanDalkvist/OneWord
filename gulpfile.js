@@ -1,3 +1,5 @@
+// dependencies
+
 var gulp = require('gulp');
 var gutil = require('gulp-util');
 var bower = require('bower');
@@ -10,6 +12,8 @@ var sh = require('shelljs');
 var paths = {
     sass: ['./scss/**/*.scss']
 };
+
+// gulp tasks
 
 gulp.task('default', ['sass']);
 
