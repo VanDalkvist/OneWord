@@ -1,12 +1,13 @@
 // use strict;
 
-angular.provider('Storage', function () {
+angular.module('one-word')
+    .provider('Storage', function () {
 
-    this.$get = StorageProvider;
+        this.$get = StorageProvider;
 
-    this.$get.$inject = ['localStorageService'];
+        this.$get.$inject = ['localStorageService'];
 
-    function StorageProvider(localStorageService) {
-        return localStorageService;
-    }
-});
+        function StorageProvider(localStorageService) {
+            return localStorageService;
+        }
+    });
