@@ -1,6 +1,7 @@
-(function (module) {
+(function () {
 
-    module.factory('Word', Resource);
+    angular.module('one-word')
+        .factory('Word', Resource);
 
     Resource.$inject = ['$resource'];
 
@@ -9,4 +10,4 @@
             random: {method: 'GET', params: {action: 'random'}}
         });
     }
-})(angular.module('one-word.words', ['ngResource']));
+}());

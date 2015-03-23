@@ -1,7 +1,4 @@
-// todo: get rid of 'starter.services'
-
-angular.module('one-word', ['ionic', 'one-word.words'])
-
+angular.module('one-word')
     .run(function ($ionicPlatform) {
         $ionicPlatform.ready(function () {
             // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
