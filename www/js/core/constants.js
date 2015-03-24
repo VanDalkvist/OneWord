@@ -1,7 +1,7 @@
 // use strict;
 
 angular.module('one-word')
-    .provider('Storage', function () {
+    .provider('StorageProvider', function () {
 
         this.$get = StorageProvider;
 

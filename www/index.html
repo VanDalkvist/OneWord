@@ -5,7 +5,7 @@
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
     <title></title>
 
-    <link href="lib/ionic/css/ionic.css" rel="stylesheet">
+    <link href="lib/ionic/release/css/ionic.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
 
     <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
@@ -13,7 +13,13 @@
     -->
 
     <!-- ionic/angularjs js -->
-    <script src="lib/ionic/js/ionic.bundle.js"></script>
+    <script src="lib/angular/angular.js"></script>
+    <script src="lib/angular-animate/angular-animate.js"></script>
+    <script src="lib/angular-sanitize/angular-sanitize.js"></script>
+    <script src="lib/angular-ui-router/release/angular-ui-router.js"></script>
+    <script src="lib/ionic/release/js/ionic.js"></script>
+    <script src="lib/ionic/release/js/ionic-angular.js"></script>
+    <!--<script src="lib/ngCordova/dist/ng-cordova.js"></script>-->
     <script src="lib/angular-resource/angular-resource.js"></script>
     <script src="lib/angular-local-storage/dist/angular-local-storage.js"></script>
 
@@ -26,6 +32,8 @@
     <script src="js/core/constants.js"></script>
     <script src="js/word/words.js"></script>
     <script src="js/word/word.controller.js"></script>
+    <script src="js/main/storage.js"></script>
+    <script src="js/core/settings.js"></script>
 </head>
 <body ng-app="one-word">
 <!--

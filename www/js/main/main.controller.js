@@ -3,13 +3,11 @@
 
     app.controller("MainCtrl", Controller);
 
-    Controller.$inject = [];
+    Controller.$inject = ['$scope'];
 
-    function Controller() {
+    function Controller($scope) {
 
         // initialization
-
-        var vm = this;
 
         // model
 
@@ -17,8 +15,8 @@
 
         // public functions
 
-        vm.next = _next;
-        vm.prev = _prev;
+        $scope.next = _next;
+        $scope.prev = _prev;
 
         // private functions
 

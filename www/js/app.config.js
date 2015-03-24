@@ -4,10 +4,19 @@
     var app = angular.module('one-word', ['ionic', 'ngResource', 'LocalStorageModule']);
 
     app.config(_config);
+    //app.config(['$httpProvider', function($httpProvider) {
+    //    $httpProvider.defaults.useXDomain = true;
+    //    delete $httpProvider.defaults.headers.common['X-Requested-With'];
+    //}
+    //]);
+    _config.$inject = ['$stateProvider', '$urlRouterProvider', 'SettingsProvider'];
 
-    _config.$inject = ['$stateProvider', '$urlRouterProvider'];
+    function _config($stateProvider, $urlRouterProvider, SettingsProvider) {
 
-    function _config($stateProvider, $urlRouterProvider) {
+        $urlRouterProvider.otherwise('/current');
+
+        // todo: configure server url
+        //SettingsProvider.init('http://localhost:3000');
 
         // initialization
 
@@ -15,39 +24,16 @@
             .state('current', {
                 url: "/current",
                 templateUrl: "js/word/word.html",
-                controller: 'WordCtrl as wordCtrl',
+                controller: 'WordCtrl',
                 resolve: {
-                    WordService: ['WordProvider', function (WordProvider) {
-                        return WordProvider.sync();
+                    word: ['Storage', function (Storage) {
+                        return Storage.get().$promise.then(function (word) {
+                            return word;
+                        }, function () {
+                            return '';
+                        });
                     }]
                 }
             });
-
-        //.state('prev', {
-        //    url: '/previous',
-        //    templateUrl: "word/word.html",
-        //    controller: 'WordCtrl as wordCtrl',
-        //    resolve: {
-        //        word: ['WordResource', 'WordProvider', function (WordResource, WordProvider) {
-        //            return WordProvider.previous();
-        //        }]
-        //    }
-        //})
-        //
-        //.state('next', {
-        //    url: '/next',
-        //    templateUrl: "word/word.html",
-        //    controller: 'WordCtrl as wordCtrl',
-        //    resolve: {
-        //        word: ['WordResource', 'WordProvider', function (WordResource, WordProvider) {
-        //            return WordProvider.next();
-        //        }]
-        //    }
-        //});
-
-        $urlRouterProvider.otherwise('/current');
-
-        // private functions
-
     }
 })();

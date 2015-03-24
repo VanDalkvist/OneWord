@@ -1,23 +1,21 @@
-(function (app) {
+(function () {
     'use strict';
 
-    app.controller("WordCtrl", Controller);
+    angular.module('one-word').controller("WordCtrl", Controller);
 
-    Controller.$inject = ['WordService'];
+    Controller.$inject = ['$scope', 'word'];
 
-    function Controller(WordService) {
+    function Controller($scope, word) {
 
         // initialization
 
-        var vm = this;
-
         // model
 
-        vm.model = WordService.current();
+        $scope.model = word;
 
         // public functions
 
         // private functions
 
     }
-})(angular.module('one-word'));
+}());

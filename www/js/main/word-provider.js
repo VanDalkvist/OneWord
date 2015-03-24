@@ -1,9 +1,9 @@
 angular.module('one-word')
     .factory('WordProvider', Factory);
 
-Factory.$inject = ['Word'];
+//Factory.$inject = ['Storage'];
 
-function Factory(Word) {
+function Factory() {
     var words = [], current, prev, next;
     var history = [];
 
@@ -12,7 +12,7 @@ function Factory(Word) {
     };
 
     function _sync() {
-        return Word.query(function (data) {
+        return Storage.query(function (data) {
             words = data;
 
             return {
