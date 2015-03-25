@@ -1,7 +1,21 @@
-<div class="content">
-    <h2>{{model.name}}</h2>
-    <div>{{model.definition}}</div>
-    <div ng-repeat="example in model.examples">
+<ion-view title="{{model.name}}">
+    <ion-content class="padding">
+        <p>{{model.definition}}</p>
 
+        Examples:
+        <ion-list>
+            <ion-item ng-repeat="example in model.examples">
+                <p>{{example.content}}</p>
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</ion-view>
+<ion-footer-bar align-title="left" class="bar-royal">
+    <div class="buttons" ng-click="showPrevious()">
+        <button class="button">Previous</button>
     </div>
-</div>
+    <h1 class="title">Manage</h1>
+    <div class="buttons" ng-click="showNext()">
+        <button class="button">Next</button>
+    </div>
+</ion-footer-bar>
