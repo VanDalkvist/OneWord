@@ -1,21 +1,40 @@
 <ion-view title="{{model.name}}">
-    <ion-content class="padding">
-        <p>{{model.definition}}</p>
 
-        Examples:
-        <ion-list>
-            <ion-item ng-repeat="example in model.examples">
-                <p>{{example.content}}</p>
-            </ion-item>
-        </ion-list>
+    <ion-nav-buttons side="left">
+        <button class="button button-assertive button-bar"
+                ng-click="previous()" ng-show="slideIndex > 0">
+            Previous
+        </button>
+    </ion-nav-buttons>
+
+    <ion-nav-buttons side="right">
+        <button class="button button-assertive button-bar"
+                ng-click="next(word.number)" ng-show="slideIndex != words.length">
+            Next
+        </button>
+    </ion-nav-buttons>
+
+    <ion-content class="padding">
+
+        <ion-slide-box on-slide-changed="slideChanged(index)">
+            <ion-slide ng-repeat='word in words'>
+
+                <p>{{word.content.definition}}</p>
+
+                <p>{{word.number}}</p>
+
+                Examples:
+                <ion-list>
+                    <ion-item ng-repeat="example in word.content.examples">
+                        <p>{{example.content}}</p>
+                    </ion-item>
+                </ion-list>
+
+            </ion-slide>
+        </ion-slide-box>
+
     </ion-content>
 </ion-view>
-<ion-footer-bar align-title="left" class="bar-royal">
-    <div class="buttons" ng-click="showPrevious()">
-        <button class="button">Previous</button>
-    </div>
-    <h1 class="title">Manage</h1>
-    <div class="buttons" ng-click="showNext()">
-        <button class="button">Next</button>
-    </div>
+<ion-footer-bar align-title="left" class="bar-positive">
+
 </ion-footer-bar>
