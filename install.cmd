@@ -1,0 +1,1 @@
+npm i -g gulp && npm i && bower i
