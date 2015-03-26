@@ -1,5 +1,6 @@
 {
   "name": "OneWord",
+  "version": "0.0.1",
   "private": "true",
   "devDependencies": {},
   "dependencies": {
@@ -10,5 +11,11 @@
     "angular-animate": "~1.3.15",
     "angular-ui-router": "~0.2.13",
     "angular-sanitize": "~1.3.15"
+  },
+  "resolution": {
+    "angular": "~1.3.15",
+    "angular-animate": "~1.3.15",
+    "angular-sanitize": "~1.3.15",
+    "angular-resource": "~1.3.15"
   }
 }
