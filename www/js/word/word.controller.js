@@ -3,27 +3,29 @@
 
     angular.module('one-word').controller("WordCtrl", Controller);
 
-    Controller.$inject = ['$scope', '$ionicSlideBoxDelegate', 'word'];
+    Controller.$inject = ['$scope', '$ionicSlideBoxDelegate', 'Storage', 'word'];
 
-    function Controller($scope, $ionicSlideBoxDelegate, word) {
+    function Controller($scope, $ionicSlideBoxDelegate, Storage, word) {
 
         // initialization
-        $scope.startApp = function() {
+        $scope.startApp = function () {
             //$state.go('main');
         };
 
-        var words = $scope.words = [];
+        $scope.words = Storage.all();
         $scope.model = {wordsCount: 0};
-        words.push({content: word, number: ++$scope.model.wordsCount});
-        words.push({content: word, number: ++$scope.model.wordsCount});
-//         $scope.slideIndex = 1;
+        Storage.add({content: word, number: ++$scope.model.wordsCount});
+        Storage.add({content: word, number: ++$scope.model.wordsCount});
+        $scope.slideIndex = 0;
         // model
 
         //$scope.model = word;
 
         $scope.next = function () {
-            if ($scope.slideIndex === $scope.words.length - 2)
-                words.push({content: word, number: ++$scope.model.wordsCount});
+            if ($ionicSlideBoxDelegate.currentIndex() === $scope.words.length - 1) {
+                Storage.add({content: word, number: ++$scope.model.wordsCount});
+                $ionicSlideBoxDelegate.update();
+            }
             $ionicSlideBoxDelegate.next();
         };
 
@@ -32,11 +34,27 @@
                 $ionicSlideBoxDelegate.previous();
         };
 
+        $scope.onSwipeLeft = function () {
+            $scope.swipe = 'left';
+        };
+
+        $scope.onSwipeRight = function () {
+            $scope.swipe = 'right';
+        };
+
         // public functions
 
         // Called each time the slide changes
-        $scope.slideChanged = function(index) {
+        $scope.slideChanged = function (index) {
             $scope.slideIndex = index;
+
+            if ($scope.swipe === 'left') {
+                if ($ionicSlideBoxDelegate.currentIndex() === $scope.words.length - 1) {
+                    Storage.add({content: word, number: ++$scope.model.wordsCount});
+                    $ionicSlideBoxDelegate.update();
+                }
+                $scope.swipe = '';
+            }
         };
 
         // private functions

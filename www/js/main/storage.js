@@ -4,6 +4,8 @@ Storage.$inject = ['$q', 'Word'];
 
 function Storage($q, Word) {
 
+    var entities = [];
+
     var WordMock = {
         get: function () {
             return {
@@ -16,6 +18,12 @@ function Storage($q, Word) {
                     ]
                 })
             };
+        },
+        all: function () {
+            return entities;
+        },
+        add: function (entity) {
+            entities.push(entity);
         }
     };
 
