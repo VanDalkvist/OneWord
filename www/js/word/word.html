@@ -18,7 +18,7 @@
 
         <ion-slide-box on-slide-changed="slideChanged(index)">
             <ion-slide ng-repeat='word in words'
-                       on-swipe-left="onSwipeLeft($event)" on-swipe-right="onSwipeRight($event)">
+                       on-swipe-left="next()" on-swipe-right="previous()">
 
                 <p>{{word.content.definition}}</p>
 

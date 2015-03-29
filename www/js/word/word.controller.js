@@ -3,61 +3,52 @@
 
     angular.module('one-word').controller("WordCtrl", Controller);
 
-    Controller.$inject = ['$scope', '$ionicSlideBoxDelegate', 'Storage', 'word'];
+    Controller.$inject = ['$scope', '$timeout', '$ionicSlideBoxDelegate', 'Storage', 'word'];
 
-    function Controller($scope, $ionicSlideBoxDelegate, Storage, word) {
+    function Controller($scope, $timeout, $ionicSlideBoxDelegate, Storage, word) {
 
         // initialization
         $scope.startApp = function () {
             //$state.go('main');
         };
 
-        $scope.words = Storage.all();
-        $scope.model = {wordsCount: 0};
-        Storage.add({content: word, number: ++$scope.model.wordsCount});
-        Storage.add({content: word, number: ++$scope.model.wordsCount});
-        $scope.slideIndex = 0;
-        // model
-
-        //$scope.model = word;
+        _init();
 
         $scope.next = function () {
-            if ($ionicSlideBoxDelegate.currentIndex() === $scope.words.length - 1) {
-                Storage.add({content: word, number: ++$scope.model.wordsCount});
-                $ionicSlideBoxDelegate.update();
-            }
+            $ionicSlideBoxDelegate.enableSlide(true);
             $ionicSlideBoxDelegate.next();
-        };
-
-        $scope.previous = function () {
-            if ($scope.model.wordsCount >= 1)
-                $ionicSlideBoxDelegate.previous();
-        };
-
-        $scope.onSwipeLeft = function () {
-            $scope.swipe = 'left';
-        };
-
-        $scope.onSwipeRight = function () {
-            $scope.swipe = 'right';
-        };
-
-        // public functions
-
-        // Called each time the slide changes
-        $scope.slideChanged = function (index) {
-            $scope.slideIndex = index;
-
-            if ($scope.swipe === 'left') {
+            $ionicSlideBoxDelegate.enableSlide(false);
+            console.log("ion - " + $ionicSlideBoxDelegate.currentIndex() + "; words = " + $scope.model.wordsCount);
+            $timeout(function () {
                 if ($ionicSlideBoxDelegate.currentIndex() === $scope.words.length - 1) {
                     Storage.add({content: word, number: ++$scope.model.wordsCount});
                     $ionicSlideBoxDelegate.update();
                 }
-                $scope.swipe = '';
+            });
+        };
+
+        $scope.previous = function () {
+            if ($scope.model.wordsCount >= 1) {
+                $ionicSlideBoxDelegate.enableSlide(true);
+                $ionicSlideBoxDelegate.previous();
+                $ionicSlideBoxDelegate.enableSlide(false);
             }
         };
 
+        // public functions
+
         // private functions
 
+        function _init() {
+            $scope.words = Storage.all();
+            $scope.model = {wordsCount: 0};
+            Storage.add({content: word, number: ++$scope.model.wordsCount});
+            Storage.add({content: word, number: ++$scope.model.wordsCount});
+            $scope.slideIndex = 0;
+
+            $timeout(function () {
+                $ionicSlideBoxDelegate.enableSlide(false);
+            });
+        }
     }
 }());
