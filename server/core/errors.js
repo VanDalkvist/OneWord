@@ -2,7 +2,7 @@
 
 // exports
 
-module.exports.init = _init;
+module.exports.bootstrap = _init;
 
 // initialization
 

@@ -3,14 +3,27 @@
 var express = require('express');
 var router = express.Router();
 
+// app dependencies
+
 // exports
 
-module.exports = router;
+module.exports.bootstrap = _bootstrap;
 
 // initialization
 
-router.get('/', function (req, res) {
-    res.send({name: 'word', examples: []});
-});
-
 // private methods
+
+function _bootstrap(storage) {
+    router.get('/random', _getWord.bind(storage));
+
+    return router;
+}
+
+function _getWord(req, res, next) {
+    // todo: set req.user
+    var storage = this;
+
+    storage.next(req.user.id).then(function (word) {
+        res.send(word);
+    }, next);
+}

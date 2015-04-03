@@ -1,27 +1,59 @@
+// dependencies
+
 var express = require('express');
 var path = require('path');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-//var users = require('./routes/users');
-var words = require('./routes/words');
-var errors = require('./routes/errors');
+// app dependencies
 
-var app = express();
+var WordProvider = require('./storage/word.provider.js');
+var DI = require('./core/di');
+var errors = require('./core/errors');
+var config = require('./bin/config');
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+// exports
 
-app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
-app.use(cookieParser());
+module.exports.run = _run;
 
-app.use('/words', words);
-//app.use('/users', users);
+// private functions
 
-module.exports = app;
+function _run() {
+    var di = DI.new();
 
-errors.init(app);
+    var app = _bootstrapApp();
+    di.container.register('app', app);
+
+    var wordProvider = new WordProvider(config.mongo.uri);
+    return wordProvider.connect(di).then(function (wordsStorage) {
+        di.container.register('storage', wordsStorage);
+
+        _configureAPI(app, di.resolver);
+
+        return di.resolver;
+    });
+}
+
+function _bootstrapApp() {
+    var app = express();
+
+    app.use(logger('dev'));
+    app.use(bodyParser.json());
+    app.use(bodyParser.urlencoded({extended: false}));
+    app.use(cookieParser());
+
+    app.set('port', config.port);
+
+    return app;
+}
+
+function _configureAPI(app, resolver) {
+    var storage = resolver.get('storage');
+    app.use('/words', require('./routes/words').bootstrap(storage));
+
+    errors.bootstrap(app);
+
+    //var users = require('./routes/users');
+    //app.use('/users', users);
+}
