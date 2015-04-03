@@ -1,10 +1,12 @@
-var debug = require('debug')('init');
+var debug = require('debug')('bootstrap');
+var errors = require('debug')('errors');
 var application = require('../app');
 var util = require('util');
 
 process.on('uncaughtException', function (err) {
-    console.log('Error: ', util.format(err.stack));
+    errors('uncaughtException: ', util.format(err.stack));
     setTimeout(function () {
+        // todo: restart
         process.exit(-1);
     }, 100);
 });
