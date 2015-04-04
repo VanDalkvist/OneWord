@@ -2,12 +2,12 @@
 
 var Q = require('q');
 var util = require('util');
-var logger = require('debug')('app:words');
-var errors = require('debug')('app:words:error');
+var logger = require('debug')('app:storage');
+var errors = require('debug')('app:storage:error');
 
 // exports
 
-module.exports = Words;
+module.exports = Storage;
 
 // initialization
 
@@ -15,7 +15,7 @@ var max = 10;
 
 // private methods
 
-function Words(db) {
+function Storage(db) {
     var wordsCollection = db.collection('words');
     var usersCollection = db.collection('users');
 

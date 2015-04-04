@@ -7,36 +7,43 @@ var errors = require('debug')('app:words-mock:error');
 
 // exports
 
-module.exports = Words;
+module.exports = Storage;
 
 // initialization
 
+var max = 10;
+
 // private methods
 
-function Words() {
+function Storage() {
     var wordsCollection = _buildWordsCollection();
     var usersCollection = _buildUsersCollection();
 
     this.next = _next;
+    this.getUser = _getUser;
 
     function _next(userId) {
         var number;
 
         return _getNextWordNumber(userId).then(function (wordNumber) {
             number = wordNumber;
-            return Q.nfcall(_.find, wordsCollection, {number: wordNumber});
+            return Q.when(_.find(wordsCollection, {number: wordNumber}));
         }).then(function (word) {
             var next = ++number;
-            var user = _.find(usersCollection, {userId: userId});
+            var user = _.find(usersCollection, {id: userId});
             user.word.number = (next < max ? next : null);
 
             return word;
         });
     }
 
+    function _getUser(userId) {
+        return _.find(usersCollection, {id: userId});
+    }
+
     function _getNextWordNumber(userId) {
-        return Q.nfcall(_.find, usersCollection, {id: userId}).then(function (user) {
-            return user.word.number;
+        return Q.when(_.find(usersCollection, {id: userId})).then(function (user) {
+            return user.word.number || 0;
         });
     }
 

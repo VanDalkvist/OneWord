@@ -13,7 +13,9 @@ module.exports.bootstrap = _bootstrap;
 
 // private methods
 
-function _bootstrap(storage) {
+function _bootstrap(resolver) {
+    var storage = resolver.get('storage');
+
     router.get('/random', _getWord.bind(storage));
 
     return router;

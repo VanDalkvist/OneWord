@@ -9,10 +9,15 @@ var bodyParser = require('body-parser');
 // app dependencies
 
 var DB = require('./core/db');
-var Words = require('./storage/words');
 var DI = require('./core/di');
-var errors = require('./routes/errors');
+
+var Words = require('./storage/storage');
+var WordsMock = require('./storage/storage.mock');
 var config = require('./bin/config');
+
+var users = require('./routes/users');
+var words = require('./routes/words');
+var errors = require('./routes/errors');
 
 // exports
 
@@ -28,7 +33,8 @@ function _run() {
 
     var db = new DB(config.mongo.uri, di);
     return db.connect().then(function (connection) {
-        di.container.register('storage', new Words(connection));
+        var storage = config.debug.mock ? new WordsMock() : new Words(connection);
+        di.container.register('storage', storage);
 
         _configureAPI(app, di.resolver);
 
@@ -53,13 +59,10 @@ function _bootstrapApp() {
 }
 
 function _configureAPI(app, resolver) {
-    var storage = resolver.get('storage');
-    app.use('/api/words', require('./routes/words').bootstrap(storage));
+    app.use('/api/users', users.bootstrap(resolver));
+    app.use('/api/words', words.bootstrap(resolver));
 
     errors.bootstrap(app);
-
-    //var users = require('./routes/users');
-    //app.use('/users', users);
 }
 
 function _configureStatic(app) {
