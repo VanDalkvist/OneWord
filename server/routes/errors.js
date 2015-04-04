@@ -1,8 +1,11 @@
 // dependencies
 
+var util = require('util');
+
 // app dependencies
 
 var config = require('../bin/config');
+var errors = require('debug')('app:router:errors');
 
 // exports
 
@@ -21,6 +24,11 @@ function _init(app) {
     });
 
     // error handlers
+
+    app.use(function (err, req, res, next) {
+        errors("Internal error: \n", util.format(err.stack));
+        next(err);
+    });
 
     // development error handler
     // will print stacktrace
