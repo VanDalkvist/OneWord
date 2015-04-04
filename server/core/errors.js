@@ -2,15 +2,15 @@
 
 var errors = require('debug')('errors');
 
-// exports
-
-module.exports = Errors;
-
 // initialization
 
 var Errors = {
     criticalError: _criticalError
 };
+
+// exports
+
+module.exports = Errors;
 
 // private methods
 
