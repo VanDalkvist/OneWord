@@ -15,7 +15,7 @@ module.exports = Words;
 
 function Words() {
     var wordsCollection = _buildWordsCollection();
-    var usersCollection = _buildUserCollection();
+    var usersCollection = _buildUsersCollection();
 
     this.next = _next;
 
@@ -40,7 +40,7 @@ function Words() {
         });
     }
 
-    function _buildUserCollection() {
+    function _buildUsersCollection() {
         return [
             {
                 id: 1,
