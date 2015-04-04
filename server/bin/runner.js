@@ -17,4 +17,6 @@ application.run().then(function (resolver) {
     var server = app.listen(app.get('port'), function () {
         debug('Express server listening on port ' + server.address().port);
     });
+}, function (err) {
+    errors('uncaughtException: ', util.format(err.stack));
 });

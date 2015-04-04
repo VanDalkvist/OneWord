@@ -8,7 +8,8 @@ var bodyParser = require('body-parser');
 
 // app dependencies
 
-var WordProvider = require('./storage/word.provider.js');
+var DB = require('./core/db');
+var Words = require('./storage/words');
 var DI = require('./core/di');
 var errors = require('./core/errors');
 var config = require('./bin/config');
@@ -25,9 +26,9 @@ function _run() {
     var app = _bootstrapApp();
     di.container.register('app', app);
 
-    var wordProvider = new WordProvider(config.mongo.uri);
-    return wordProvider.connect(di).then(function (wordsStorage) {
-        di.container.register('storage', wordsStorage);
+    var db = new DB(config.mongo.uri);
+    return db.connect(di).then(function (connection) {
+        di.container.register('storage', new Words(connection));
 
         _configureAPI(app, di.resolver);
 
@@ -43,6 +44,8 @@ function _bootstrapApp() {
     app.use(bodyParser.urlencoded({extended: false}));
     app.use(cookieParser());
 
+    _configureStatic(app);
+
     app.set('port', config.port);
 
     return app;
@@ -56,4 +59,16 @@ function _configureAPI(app, resolver) {
 
     //var users = require('./routes/users');
     //app.use('/users', users);
+}
+
+function _configureStatic(app) {
+    // CORS (Cross-Origin Resource Sharing) headers to support Cross-site HTTP requests
+    app.all('*', function (req, res, next) {
+        res.header("Access-Control-Allow-Origin", "*");
+        res.header("Access-Control-Allow-Headers", "X-Requested-With");
+        next();
+    });
+
+    // view engine setup for ionic development purposes.
+    app.use(express.static(path.join(__dirname, '../www')));
 }
