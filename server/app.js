@@ -47,13 +47,14 @@ function _bootstrapApp() {
     _configureStatic(app);
 
     app.set('port', config.port);
+    app.set('env', config.env);
 
     return app;
 }
 
 function _configureAPI(app, resolver) {
     var storage = resolver.get('storage');
-    app.use('/words', require('./routes/words').bootstrap(storage));
+    app.use('/api/words', require('./routes/words').bootstrap(storage));
 
     errors.bootstrap(app);
 

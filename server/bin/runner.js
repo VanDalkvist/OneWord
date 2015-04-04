@@ -9,13 +9,15 @@ var util = require('util');
 
 var Errors = require('../core/errors');
 
-process.on('uncaughtException', Errors.criticalError);
-
 module.exports = application.run().then(function (resolver) {
     var app = resolver.get('app');
 
     var server = app.listen(app.get('port'), function () {
-        debug('Express server listening on port ' + server.address().port);
+        debug(
+            'Express server listening on port '
+            + server.address().port + ' under "'
+            + app.get('env') + '" environment'
+        );
     });
     return resolver;
 }, Errors.criticalError);

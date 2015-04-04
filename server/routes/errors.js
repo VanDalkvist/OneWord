@@ -1,5 +1,9 @@
 // dependencies
 
+// app dependencies
+
+var config = require('../bin/config');
+
 // exports
 
 module.exports.bootstrap = _init;
@@ -20,7 +24,7 @@ function _init(app) {
 
     // development error handler
     // will print stacktrace
-    if (app.get('env') === 'dev') {
+    if (config.isDebug(app.get('env'))) {
         app.use(function (err, req, res, next) {
             res.status(err.status || 500);
             res.send({
