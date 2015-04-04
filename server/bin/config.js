@@ -8,5 +8,9 @@ module.exports = {
                 || process.env.OPENSHIFT_MONGODB_DB_URL
                 || 'mongodb://localhost/one-word'
     },
-    "port": process.env.PORT || 3000
+    "port": process.env.PORT || 3000,
+    "debug": {
+        "mock": true
+    },
+    "env": process.env.NODE_ENV || process.env.ENV || "dev"
 };

@@ -11,7 +11,7 @@ var bodyParser = require('body-parser');
 var DB = require('./core/db');
 var Words = require('./storage/words');
 var DI = require('./core/di');
-var errors = require('./core/errors');
+var errors = require('./routes/errors');
 var config = require('./bin/config');
 
 // exports
