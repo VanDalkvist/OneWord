@@ -2,6 +2,8 @@
 
 var Q = require('q');
 var util = require('util');
+var logger = require('debug')('words');
+var errors = require('debug')('words:error');
 
 // exports
 
@@ -14,8 +16,6 @@ var max = 10;
 // private methods
 
 function Words(db) {
-    var logger = console;
-
     var wordsCollection = db.collection('words');
     var usersCollection = db.collection('users');
 
@@ -30,7 +30,6 @@ function Words(db) {
         }).then(function (word) {
             var next = ++number;
             usersCollection.updateOne({userId: userId}, {$set: {'word.number': (next < max ? next : null)}});
-
             return word;
         });
     }
@@ -42,7 +41,7 @@ function Words(db) {
             .then(function (wordNumber) {
                 return wordNumber || 0;
             }, function (err) {
-                logger.error("Error during getting the word. ", util.format(err), util.format(err.stack));
+                errors("Error during getting the word. ", util.format(err), util.format(err.stack));
                 throw new Error("Error during getting the word.");
             });
     }
