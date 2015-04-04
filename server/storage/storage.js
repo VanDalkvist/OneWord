@@ -29,7 +29,8 @@ function Storage(db) {
             return Q.nfcall(wordsCollection.findOne, {number: wordNumber});
         }).then(function (word) {
             var next = ++number;
-            usersCollection.updateOne({userId: userId}, {$set: {'word.number': (next < max ? next : null)}});
+            usersCollection.updateOne({id: userId}, {$set: {'word.number': (next < max ? next : null)}});
+            delete word.number;
             return word;
         });
     }
