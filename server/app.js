@@ -26,8 +26,8 @@ function _run() {
     var app = _bootstrapApp();
     di.container.register('app', app);
 
-    var db = new DB(config.mongo.uri);
-    return db.connect(di).then(function (connection) {
+    var db = new DB(config.mongo.uri, di);
+    return db.connect().then(function (connection) {
         di.container.register('storage', new Words(connection));
 
         _configureAPI(app, di.resolver);

@@ -3,6 +3,8 @@
 var MongoClient = require('mongodb').MongoClient;
 var Q = require('q');
 var util = require('util');
+var logger = require('debug')('db');
+var errors = require('debug')('db:error');
 
 // exports
 
@@ -12,20 +14,20 @@ module.exports = DB;
 
 // private methods
 
-function DB(url) {
-    var logger = console;
-
+function DB(url, di) {
     var host = url;
+    var resolver = di.resolver;
+    var container = di.container;
 
     this.connect = _connect;
 
-    function _connect(di) {
+    function _connect() {
         return Q.nfcall(MongoClient.connect, host).then(function (db) {
-            logger.log("Connection to the server was established.");
-            di.container.register('db', db);
+            logger("Connection to the server was established.");
+            container.register('db', db);
             return db;
         }, function (err) {
-            logger.error("Error during connection to the server. ", util.format(err), util.format(err.stack));
+            errors("Error during connection to the server. ", util.format(err), util.format(err.stack));
             throw new Error("Error during connection to the server.");
         });
     }

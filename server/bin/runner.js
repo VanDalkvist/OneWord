@@ -19,4 +19,8 @@ application.run().then(function (resolver) {
     });
 }, function (err) {
     errors('uncaughtException: ', util.format(err.stack));
+    setTimeout(function () {
+        // todo: restart
+        process.exit(-1);
+    }, 100);
 });
