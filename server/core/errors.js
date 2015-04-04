@@ -1,6 +1,7 @@
 // dependencies
 
-var errors = require('debug')('errors');
+var errors = require('debug')('app:errors');
+var util = require('util');
 
 // initialization
 

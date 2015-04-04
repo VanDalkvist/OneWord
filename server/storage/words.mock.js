@@ -2,8 +2,8 @@
 
 var Q = require('q');
 var _ = require('lodash');
-var logger = require('debug')('words-mock');
-var errors = require('debug')('words-mock:error');
+var logger = require('debug')('app:words-mock');
+var errors = require('debug')('app:words-mock:error');
 
 // exports
 

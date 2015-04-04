@@ -3,8 +3,8 @@
 var MongoClient = require('mongodb').MongoClient;
 var Q = require('q');
 var util = require('util');
-var logger = require('debug')('db');
-var errors = require('debug')('db:error');
+var logger = require('debug')('app:db');
+var errors = require('debug')('app:db:error');
 
 // exports
 

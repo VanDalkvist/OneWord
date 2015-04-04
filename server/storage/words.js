@@ -2,8 +2,8 @@
 
 var Q = require('q');
 var util = require('util');
-var logger = require('debug')('words');
-var errors = require('debug')('words:error');
+var logger = require('debug')('app:words');
+var errors = require('debug')('app:words:error');
 
 // exports
 
