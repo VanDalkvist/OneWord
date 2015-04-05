@@ -15,7 +15,7 @@ module.exports = DB;
 // private methods
 
 function DB(url, di) {
-    var host = url;
+    var host = url; // todo: resolve from config
     var resolver = di.resolver;
     var container = di.container;
 
