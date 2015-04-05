@@ -8,16 +8,17 @@ var bodyParser = require('body-parser');
 
 // app dependencies
 
-var DB = require('./core/db');
-var DI = require('./core/di');
-
-var Words = require('./storage/storage');
-var WordsMock = require('./storage/storage.mock');
 var config = require('./bin/config');
 
-var users = require('./routes/users');
-var words = require('./routes/words');
-var errors = require('./routes/errors');
+var DB = require('./components/core/db');
+var DI = require('./components/core/di');
+
+var Words = require('./components/storage/storage');
+var WordsMock = require('./components/storage/storage.mock');
+
+var users = require('./components/routes/users');
+var words = require('./components/routes/words');
+var errors = require('./components/routes/errors');
 
 // exports
 
@@ -30,12 +31,9 @@ function _run() {
 
     var app = _bootstrapApp();
     di.container.register('app', app);
+    di.container.register('config', config);
 
-    var db = new DB(config.mongo.uri, di);
-    return db.connect().then(function (connection) {
-        var storage = config.debug.mock ? new WordsMock() : new Words(connection);
-        di.container.register('storage', storage);
-
+    return _connect(di).then(function () {
         _configureAPI(app, di.resolver);
 
         return di.resolver;
@@ -58,11 +56,22 @@ function _bootstrapApp() {
     return app;
 }
 
+function _connect(di) {
+    var db = new DB(config.mongo.uri, di);
+    return db.connect().then(function (connection) {
+        var storage = config.debug.mock ? new WordsMock() : new Words(connection);
+        di.container.register('storage', storage);
+    });
+}
+
+/**
+ * Order of middleware is important
+ */
 function _configureAPI(app, resolver) {
     app.use('/api/users', users.bootstrap(resolver));
     app.use('/api/words', words.bootstrap(resolver));
 
-    errors.bootstrap(app);
+    errors.bootstrap(resolver);
 }
 
 function _configureStatic(app) {

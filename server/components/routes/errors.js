@@ -4,7 +4,6 @@ var util = require('util');
 
 // app dependencies
 
-var config = require('../bin/config');
 var errors = require('debug')('app:router:errors');
 
 // exports
@@ -15,7 +14,9 @@ module.exports.bootstrap = _init;
 
 // private methods
 
-function _init(app) {
+function _init(resolver) {
+    var app = resolver.get('app');
+    var config = resolver.get('config');
     // catch 404 and forward to error handler
     app.use(function (req, res, next) {
         var err = new Error('Not Found');

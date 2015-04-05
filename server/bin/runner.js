@@ -7,7 +7,7 @@ var util = require('util');
 
 // app dependencies
 
-var Errors = require('../core/errors');
+var Errors = require('../components/core/errors');
 
 module.exports = application.run().then(function (resolver) {
     var app = resolver.get('app');
