@@ -9,8 +9,8 @@ var util = require('util');
 
 var Errors = require('../components/core/errors');
 
-module.exports = application.run().then(function (resolver) {
-    var app = resolver.get('app');
+module.exports = application.run().then(function (instance) {
+    var app = instance.get('app');
 
     var server = app.listen(app.get('port'), function () {
         debug(
@@ -19,5 +19,5 @@ module.exports = application.run().then(function (resolver) {
             + app.get('env') + '" environment'
         );
     });
-    return resolver;
+    return instance;
 }, Errors.criticalError);
