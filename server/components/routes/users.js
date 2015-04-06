@@ -10,9 +10,9 @@ module.exports.bootstrap = _bootstrap;
 
 // private methods
 
-function _bootstrap(resolver) {
-    var app = resolver.get('app');
-    var storage = resolver.get('storage');
+function _bootstrap(instance) {
+    var app = instance.get('app');
+    var storage = instance.get('storage');
 
     app.use('*', function (req, res, next) {
         req.userId = _.random(1, 4); // todo: provide real userId
