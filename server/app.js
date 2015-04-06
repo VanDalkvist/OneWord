@@ -23,21 +23,29 @@ var errors = require('./components/routes/errors');
 // exports
 
 module.exports.run = _run;
+module.exports.bootstrap = _bootstrap;
 
 // private functions
 
 function _run() {
+    return _bootstrap().then(function (instance) {
+        _configureStatic(instance);
+        _configureAPI(instance);
+        return instance;
+    });
+}
+
+function _bootstrap() {
     var di = DI.new();
     di.container.register('config', config);
 
     var app = _bootstrapApp(di.resolver);
     di.container.register('app', app);
 
-    return _connect(di).then(function () {
-        _configureAPI(di.resolver);
-    }).then(function () {
-        return di.resolver;
-    });
+    return _connect(di)
+        .then(function () {
+            return di.resolver;
+        });
 }
 
 function _bootstrapApp(resolver) {
@@ -47,8 +55,6 @@ function _bootstrapApp(resolver) {
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({extended: false}));
     app.use(cookieParser());
-
-    _configureStatic(app);
 
     var config = resolver.get('config');
     app.set('port', config.port);
@@ -70,15 +76,16 @@ function _connect(di) {
 /**
  * Order of middleware is important
  */
-function _configureAPI(resolver) {
-    var app = resolver.get('app');
-    app.use('/api/users', users.bootstrap(resolver));
-    app.use('/api/words', words.bootstrap(resolver));
+function _configureAPI(instance) {
+    var app = instance.get('app');
+    app.use('/api/users', users.bootstrap(instance));
+    app.use('/api/words', words.bootstrap(instance));
 
-    errors.bootstrap(resolver);
+    errors.bootstrap(instance);
 }
 
-function _configureStatic(app) {
+function _configureStatic(instance) {
+    var app = instance.get('app');
     // CORS (Cross-Origin Resource Sharing) headers to support Cross-site HTTP requests
     app.all('*', function (req, res, next) {
         res.header("Access-Control-Allow-Origin", "*");
