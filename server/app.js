@@ -28,19 +28,19 @@ module.exports.run = _run;
 
 function _run() {
     var di = DI.new();
-
-    var app = _bootstrapApp();
-    di.container.register('app', app);
     di.container.register('config', config);
 
-    return _connect(di).then(function () {
-        _configureAPI(app, di.resolver);
+    var app = _bootstrapApp(di.resolver);
+    di.container.register('app', app);
 
+    return _connect(di).then(function () {
+        _configureAPI(di.resolver);
+    }).then(function () {
         return di.resolver;
     });
 }
 
-function _bootstrapApp() {
+function _bootstrapApp(resolver) {
     var app = express();
 
     app.use(logger('dev'));
@@ -50,6 +50,7 @@ function _bootstrapApp() {
 
     _configureStatic(app);
 
+    var config = resolver.get('config');
     app.set('port', config.port);
     app.set('env', config.env);
 
@@ -57,8 +58,10 @@ function _bootstrapApp() {
 }
 
 function _connect(di) {
-    var db = new DB(config.mongo.uri, di);
+    var config = di.resolver.get('config');
+    var db = new DB(config.mongo.uri);
     return db.connect().then(function (connection) {
+        di.container.register('db', connection);
         var storage = config.debug.mock ? new WordsMock() : new Words(connection);
         di.container.register('storage', storage);
     });
@@ -67,7 +70,8 @@ function _connect(di) {
 /**
  * Order of middleware is important
  */
-function _configureAPI(app, resolver) {
+function _configureAPI(resolver) {
+    var app = resolver.get('app');
     app.use('/api/users', users.bootstrap(resolver));
     app.use('/api/words', words.bootstrap(resolver));
 
