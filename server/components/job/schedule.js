@@ -1,6 +1,9 @@
+'use strict';
+
 // dependencies
 
 var https = require('https');
+var _ = require('lodash');
 
 // Backwards-compat with node 0.10.x
 var EventEmitter = require('events').EventEmitter;
@@ -8,10 +11,6 @@ var EventEmitter = require('events').EventEmitter;
 // app dependencies
 
 var app = require('../../app');
-
-// exports
-
-//module.exports = {};
 
 // initialization
 
@@ -29,15 +28,7 @@ function _job(instance) {
 
     var api = config.api;
 
-    var options = {
-        hostname: api.uri,
-        path: '?random=true',
-        headers: {
-            'X-Mashape-Key': api.key
-        }
-    };
-
-    var random = https.get(options);
+    var random = https.get(_buildOptions('?random=true'));
 
     random.once('response', function (response) {
         console.log("Got response: " + response.statusCode);
@@ -45,10 +36,14 @@ function _job(instance) {
 
         // todo: http://dailyjs.com/2012/11/19/streams-part-2/
         response.on('readable', function () {
-            var data, chunk;
+            var data = '', chunk;
             while ((chunk = response.read()) != null) {
                 data += chunk;
             }
+            var parsed = JSON.parse(data);
+            var word = parsed.word;
+
+            https.get(_buildOptions('words/' + word));
         });
 
         //response.pipe();
@@ -60,4 +55,14 @@ function _job(instance) {
     }).on('error', function (err) {
         console.log("Got error: " + err.message);
     });
+
+    function _buildOptions(queryString) {
+        var authHeaders = {'X-Mashape-Key': api.key};
+
+        return _requestOptions({headers: authHeaders}, queryString);
+    }
+
+    function _requestOptions(options, queryString) {
+        return _.extend({}, {hostname: api.uri, path: queryString}, options);
+    }
 }
