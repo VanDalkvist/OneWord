@@ -1,5 +1,10 @@
 // dependencies
 
+var https = require('https');
+
+// Backwards-compat with node 0.10.x
+var EventEmitter = require('events').EventEmitter;
+
 // app dependencies
 
 var app = require('../../app');
@@ -10,6 +15,11 @@ var app = require('../../app');
 
 // initialization
 
+var emitter = new EventEmitter();
+
+emitter.on('random', function (stream) {
+
+});
 app.boostrap().then(_job);
 
 // private methods
@@ -19,36 +29,35 @@ function _job(instance) {
 
     var api = config.api;
 
-    var postData = querystring.stringify({
-        'msg': 'Hello World!'
-    });
-
     var options = {
-        hostname: 'www.google.com',
-        port: 80,
-        path: '/upload',
-        method: 'POST',
+        hostname: api.uri,
+        path: '?random=true',
         headers: {
-            // todo: set api headers
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Content-Length': postData.length
+            'X-Mashape-Key': api.key
         }
     };
 
-    var req = http.request(options, function (res) {
-        console.log('STATUS: ' + res.statusCode);
-        console.log('HEADERS: ' + JSON.stringify(res.headers));
-        //res.setEncoding('utf8');
-        res.on('data', {encoding: 'utf8'}, function (chunk) {
-            console.log('BODY: ' + chunk);
+    var random = https.get(options);
+
+    random.once('response', function (response) {
+        console.log("Got response: " + response.statusCode);
+        console.log('Got headers: ' + JSON.stringify(response.headers));
+
+        // todo: http://dailyjs.com/2012/11/19/streams-part-2/
+        response.on('readable', function () {
+            var data, chunk;
+            while ((chunk = response.read()) != null) {
+                data += chunk;
+            }
         });
-    });
 
-    req.on('error', function (e) {
-        console.log('problem with request: ' + e.message);
-    });
+        //response.pipe();
 
-    // write data to request body
-    req.write(postData);
-    req.end();
+        //response.on('data', {encoding: 'utf8'}, function (chunk) {
+        //    // todo: parse response
+        //    console.log('Got body: ' + chunk);
+        //});
+    }).on('error', function (err) {
+        console.log("Got error: " + err.message);
+    });
 }
