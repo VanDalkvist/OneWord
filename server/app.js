@@ -42,10 +42,9 @@ function _bootstrap() {
     var app = _bootstrapApp(di.resolver);
     di.container.register('app', app);
 
-    return _connect(di)
-        .then(function () {
-            return di.resolver;
-        });
+    return _connect(di).then(function () {
+        return di.resolver;
+    });
 }
 
 function _bootstrapApp(resolver) {
