@@ -5,20 +5,12 @@
 var https = require('https');
 var _ = require('lodash');
 
-// Backwards-compat with node 0.10.x
-var EventEmitter = require('events').EventEmitter;
-
 // app dependencies
 
 var app = require('../../app');
 
 // initialization
 
-var emitter = new EventEmitter();
-
-emitter.on('random', function (stream) {
-
-});
 app.boostrap().then(_job);
 
 // private methods
@@ -28,41 +20,62 @@ function _job(instance) {
 
     var api = config.api;
 
-    var random = https.get(_buildOptions('?random=true'));
+    var optionsBuilder = {
+        dev: _getDevOptions,
+        mock: _getDevOptions,
+        prod: _getOptions
+    };
 
-    random.once('response', function (response) {
-        console.log("Got response: " + response.statusCode);
-        console.log('Got headers: ' + JSON.stringify(response.headers));
-
-        // todo: http://dailyjs.com/2012/11/19/streams-part-2/
-        response.on('readable', function () {
-            var data = '', chunk;
-            while ((chunk = response.read()) != null) {
-                data += chunk;
-            }
-            var parsed = JSON.parse(data);
-            var word = parsed.word;
-
-            https.get(_buildOptions('words/' + word));
+    var queryString = '/api/words/random';
+    var random = https.get(_buildOptions(queryString), function (res) {
+        _parseBody(res, function () {
+            var word = res.body.word; // todo: use in real api
+            https.get(_buildOptions(queryString), function (res) {
+                _parseBody(res, function () {
+                    done();
+                });
+            }).on('error', _errCallback);
         });
+    }).on('error', _errCallback);
 
-        //response.pipe();
-
-        //response.on('data', {encoding: 'utf8'}, function (chunk) {
-        //    // todo: parse response
-        //    console.log('Got body: ' + chunk);
-        //});
-    }).on('error', function (err) {
-        console.log("Got error: " + err.message);
-    });
-
-    function _buildOptions(queryString) {
-        var authHeaders = {'X-Mashape-Key': api.key};
-
-        return _requestOptions({headers: authHeaders}, queryString);
+    function _errCallback(err) {
+        console.log('Error: ', err);
     }
 
-    function _requestOptions(options, queryString) {
-        return _.extend({}, {hostname: api.uri, path: queryString}, options);
+    function _parseBody(res, callback) {
+        var body = '';
+        res.on('data', function (chunk) {
+            body += chunk;
+        });
+        res.on('end', function () {
+            res.body = JSON.parse(body);
+            callback();
+        });
+    }
+
+    function _buildOptions(queryString) {
+        return optionsBuilder[config.env](queryString);
+    }
+
+    function _getDevOptions(queryString) {
+        return {
+            hostname: 'localhost',
+            port: config.port,
+            path: queryString,
+            headers: {
+                'content-type': 'application/json'
+            }
+        };
+    }
+
+    function _getOptions(queryString) {
+        return {
+            hostname: api.uri,
+            path: queryString,
+            headers: {
+                'content-type': 'application/json',
+                'X-Mashape-Key': api.key
+            }
+        };
     }
 }

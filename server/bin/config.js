@@ -21,6 +21,6 @@ function _buildConfig() {
 
     function _isDebug() {
         var config = this;
-        return config.env === 'test' || config.env === 'dev';
+        return config.env === 'test' || config.env === 'dev' || config.env === 'mock';
     }
 }
