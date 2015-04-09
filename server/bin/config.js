@@ -9,7 +9,8 @@ function _buildConfig() {
         "mongo": {
             "uri": process.env.MONGOLAB_URI || process.env.MONGOHQ_URL
             || process.env.OPENSHIFT_MONGODB_DB_URL
-            || 'mongodb://localhost/one-word'
+            || 'mongodb://localhost:27017/one-word',
+            "address": 'localhost:27017/one-word'
         },
         "port": (process.env.ENV === 'test') ? 3001 : (process.env.PORT || 3000),
         "debug": {

@@ -28,6 +28,10 @@ module.exports.bootstrap = _bootstrap;
 // private functions
 
 function _run() {
+    var job = require('./components/job');
+
+    job.start('./components/job/schedule');
+
     return _bootstrap().then(function (instance) {
         _configureStatic(instance);
         _configureAPI(instance);

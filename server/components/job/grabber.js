@@ -6,17 +6,13 @@ var https = require('https');
 var _ = require('lodash');
 var Q = require('q');
 
-// app dependencies
+// exports
 
-var app = require('../../app');
-
-// initialization
-
-app.boostrap().then(_job);
+module.exports.fetch = _fetch;
 
 // private methods
 
-function _job(instance) {
+function _fetch(instance) {
     var config = instance.get('config');
     var db = instance.get('db');
 
@@ -28,11 +24,15 @@ function _job(instance) {
         prod: _getOptions
     };
 
+    var deferred = Q.defer();
+
     var queryString = '/api/words/random';
     var random =
         https
             .get(_buildOptions(queryString), _produceRandomWord)
             .on('error', _errCallback);
+
+    return deferred.promise;
 
     function _produceRandomWord(res) {
         _parseBody(res).then(_getWordDefinitions);
@@ -46,13 +46,14 @@ function _job(instance) {
     }
 
     function _getFullWord(res) {
-        _parseBody(res).then(function () {
-            // todo: save to database
+        _parseBody(res).then(function (word) {
+            deferred.resolve(word);
         });
     }
 
     function _errCallback(err) {
         console.log('Error: ', err);
+        deferred.reject(err);
     }
 
     function _parseBody(res) {
