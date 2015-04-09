@@ -4,6 +4,7 @@
 
 var https = require('https');
 var _ = require('lodash');
+var Q = require('q');
 
 // app dependencies
 
@@ -17,6 +18,7 @@ app.boostrap().then(_job);
 
 function _job(instance) {
     var config = instance.get('config');
+    var db = instance.get('db');
 
     var api = config.api;
 
@@ -27,30 +29,46 @@ function _job(instance) {
     };
 
     var queryString = '/api/words/random';
-    var random = https.get(_buildOptions(queryString), function (res) {
-        _parseBody(res, function () {
-            var word = res.body.word; // todo: use in real api
-            https.get(_buildOptions(queryString), function (res) {
-                _parseBody(res, function () {
-                    done();
-                });
-            }).on('error', _errCallback);
+    var random =
+        https
+            .get(_buildOptions(queryString), _produceRandomWord)
+            .on('error', _errCallback);
+
+    function _produceRandomWord(res) {
+        _parseBody(res).then(_getWordDefinitions);
+    }
+
+    function _getWordDefinitions(randomWord) {
+        var word = randomWord.word; // todo: use in real api
+        https
+            .get(_buildOptions(queryString), _getFullWord)
+            .on('error', _errCallback);
+    }
+
+    function _getFullWord(res) {
+        _parseBody(res).then(function () {
+            // todo: save to database
         });
-    }).on('error', _errCallback);
+    }
 
     function _errCallback(err) {
         console.log('Error: ', err);
     }
 
-    function _parseBody(res, callback) {
+    function _parseBody(res) {
+        var deferred = Q.defer();
         var body = '';
         res.on('data', function (chunk) {
             body += chunk;
         });
         res.on('end', function () {
             res.body = JSON.parse(body);
-            callback();
+            deferred.resolve(body);
         });
+        res.on('error', function (err) {
+            deferred.reject(err);
+        });
+        return deferred.promise;
     }
 
     function _buildOptions(queryString) {
