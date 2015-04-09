@@ -8,7 +8,7 @@ var request = require('request');
 
 // app dependencies
 
-var runner = require('../../bin/runner');
+var runner = require('../../bin');
 
 // tests
 
@@ -36,6 +36,7 @@ describe('streams experiments', function () {
             _parseBody(res, function () {
                 _onLoaded(res);
 
+                var word = res.body.word;
                 http.get(options, function (res) {
                     _parseBody(res, function () {
                         _onLoaded(res);
