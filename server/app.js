@@ -30,7 +30,7 @@ module.exports.bootstrap = _bootstrap;
 function _run() {
     var job = require('./components/job');
 
-    job.start('./components/job/schedule');
+    job.start('./server/components/job/schedule');
 
     return _bootstrap().then(function (instance) {
         _configureStatic(instance);

@@ -1,6 +1,8 @@
 // dependencies
 
 var Agenda = require('agenda');
+var debug = require('debug');
+var scheduleLogger = debug('scheduleLogger');
 
 // app dependencies
 
@@ -14,20 +16,21 @@ _runScheduler();
 // private methods
 
 function _runScheduler() {
-    app.boostrap().then(function (instance) {
+    app.bootstrap().then(function (instance) {
         var config = instance.get('config');
         var schedule = new Agenda({db: {
             address: config.address,
             collection: 'agenda.jobs'
         }});
+        scheduleLogger("configuring grabbing job...");
 
         schedule.every('one minute', 'grab words');
         //schedule.every('one day', 'grab words');
 
         schedule.define('grab words', function(job, done) {
-            console.log("start grabbing job...");
+            scheduleLogger("start grabbing job...");
             grabber.fetch(instance).then(function (result) {
-                console.log("start grabbing job...");
+                scheduleLogger("start grabbing job...");
                 // todo: save to database
             });
         });
