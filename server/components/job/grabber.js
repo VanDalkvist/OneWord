@@ -2,7 +2,7 @@
 
 // dependencies
 
-var https = require('https');
+var http = require('http');
 var _ = require('lodash');
 var Q = require('q');
 
@@ -28,7 +28,7 @@ function _fetch(instance) {
 
     var queryString = '/api/words/random';
     var random =
-        https
+        http
             .get(_buildOptions(queryString), _produceRandomWord)
             .on('error', _errCallback);
 
@@ -40,7 +40,7 @@ function _fetch(instance) {
 
     function _getWordDefinitions(randomWord) {
         var word = randomWord.word; // todo: use in real api
-        https
+        http
             .get(_buildOptions(queryString), _getFullWord)
             .on('error', _errCallback);
     }
