@@ -5,6 +5,7 @@ var path = require('path');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var debug = require('debug');
 
 // app dependencies
 
@@ -13,12 +14,16 @@ var config = require('./bin/config');
 var DB = require('./components/core/db');
 var DI = require('./components/core/di');
 
-var Words = require('./components/storage/storage');
-var WordsMock = require('./components/storage/storage.mock');
+var job = require('./components/job');
+
+var StorageFactory = require('./components/storage/storage.factory');
 
 var users = require('./components/routes/users');
 var words = require('./components/routes/words');
 var errors = require('./components/routes/errors');
+
+var appLogger = debug('app');
+var errorsLogger = debug('app:errors');
 
 // exports
 
@@ -28,9 +33,7 @@ module.exports.bootstrap = _bootstrap;
 // private functions
 
 function _run() {
-    var job = require('./components/job');
-
-    job.start('./server/components/job/schedule');
+    //job.start('./server/components/job/schedule');
 
     return _bootstrap().then(function (instance) {
         _configureStatic(instance);
@@ -40,13 +43,18 @@ function _run() {
 }
 
 function _bootstrap() {
+    appLogger('bootstrap application... ');
     var di = DI.new();
     di.container.register('config', config);
 
+    appLogger('starting bootstrap express application... ');
     var app = _bootstrapApp(di.resolver);
+
     di.container.register('app', app);
 
+    appLogger('configuring connection to the db... ');
     return _connect(di).then(function () {
+        appLogger('configured connection to the db.');
         return di.resolver;
     });
 }
@@ -71,7 +79,7 @@ function _connect(di) {
     var db = new DB(config.mongo.uri);
     return db.connect().then(function (connection) {
         di.container.register('db', connection);
-        var storage = config.debug.mock ? new WordsMock() : new Words(connection);
+        var storage = StorageFactory.create(config.env, connection);
         di.container.register('storage', storage);
     });
 }
