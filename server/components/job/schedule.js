@@ -10,13 +10,9 @@ var grabber = require('./grabber');
 
 // initialization
 
-_runScheduler();
+app.bootstrap().then(_startScheduler, _connectionFailed);
 
 // private methods
-
-function _runScheduler() {
-    app.bootstrap().then(_startScheduler, _connectionFailed);
-}
 
 function _startScheduler(instance) {
     var config = instance.get('config');
@@ -31,7 +27,17 @@ function _startScheduler(instance) {
     });
     console.log("configuring grabbing job...");
 
-    schedule.define('grab words', _grabWordsJob);
+    schedule.define('grab words', function _grabWordsJob(job, done) {
+        console.log("start grabbing job...");
+        grabber.fetch(instance).then(function (result) {
+            console.log("finish grabbing job...");
+            done();
+            // todo: save to database
+        }, function (err) {
+            console.log("error occurs during grabbing job.", util.format(err));
+            done(err);
+        });
+    });
 
     //schedule.every('one day', 'grab words');
     schedule.every('30 seconds', 'grab words');
@@ -41,16 +47,4 @@ function _startScheduler(instance) {
 
 function _connectionFailed(err) {
     console.error(util.format(err.stack));
-}
-
-function _grabWordsJob(job, done) {
-    console.log("start grabbing job...");
-    grabber.fetch(instance).then(function (result) {
-        console.log("finish grabbing job...");
-        done();
-        // todo: save to database
-    }, function (err) {
-        console.log("error occurs during grabbing job.", util.format(err));
-        done(err);
-    });
 }
