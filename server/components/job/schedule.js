@@ -18,10 +18,6 @@ function _runScheduler() {
     app.bootstrap().then(_startScheduler, _connectionFailed);
 }
 
-function _connectionFailed(err) {
-    console.error(util.format(err.stack));
-}
-
 function _startScheduler(instance) {
     var config = instance.get('config');
 
@@ -41,6 +37,10 @@ function _startScheduler(instance) {
     schedule.every('30 seconds', 'grab words');
 
     schedule.start();
+}
+
+function _connectionFailed(err) {
+    console.error(util.format(err.stack));
 }
 
 function _grabWordsJob(job, done) {
