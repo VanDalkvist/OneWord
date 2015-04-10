@@ -35,28 +35,42 @@ module.exports.bootstrap = _bootstrap;
 function _run() {
     //job.start('./server/components/job/schedule');
 
-    return _bootstrap().then(function (instance) {
-        _configureStatic(instance);
-        _configureAPI(instance);
-        return instance;
-    });
+    return _build()
+        .then(function (di) {
+            _configureExpressApp(di);
+            return _provideInstance(di);
+        })
+        .then(function (instance) {
+            _configureStatic(instance);
+            _configureAPI(instance);
+            return instance;
+        });
 }
 
-function _bootstrap() {
+function _build() {
     appLogger('bootstrap application... ');
     var di = DI.new();
     di.container.register('config', config);
 
+    appLogger('configuring connection to the db... ');
+    return _connect(di).then(function () {
+        return di;
+    });
+}
+
+function _configureExpressApp(di) {
     appLogger('starting bootstrap express application... ');
     var app = _bootstrapApp(di.resolver);
 
     di.container.register('app', app);
+}
 
-    appLogger('configuring connection to the db... ');
-    return _connect(di).then(function () {
-        appLogger('configured connection to the db.');
-        return di.resolver;
-    });
+function _bootstrap() {
+    return _build().then(_provideInstance);
+}
+
+function _provideInstance(di) {
+    return di.resolver;
 }
 
 function _bootstrapApp(resolver) {
@@ -79,8 +93,7 @@ function _connect(di) {
     var db = new DB(config.mongo.uri);
     return db.connect().then(function (connection) {
         di.container.register('db', connection);
-        var storage = StorageFactory.create(config.env, connection);
-        di.container.register('storage', storage);
+        di.container.register('storage', StorageFactory.create(config.env, connection));
     });
 }
 
