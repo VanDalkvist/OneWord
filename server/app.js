@@ -33,7 +33,7 @@ module.exports.bootstrap = _bootstrap;
 // private functions
 
 function _run() {
-    //job.start('./server/components/job/schedule');
+    job.start('./server/components/job/schedule');
 
     return _build()
         .then(function (di) {
