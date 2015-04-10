@@ -1,8 +1,7 @@
 // dependencies
 
 var Agenda = require('agenda');
-var debug = require('debug');
-var scheduleLogger = debug('scheduleLogger');
+var util = require('util');
 
 // app dependencies
 
@@ -16,23 +15,42 @@ _runScheduler();
 // private methods
 
 function _runScheduler() {
-    app.bootstrap().then(function (instance) {
-        var config = instance.get('config');
-        var schedule = new Agenda({db: {
-            address: config.address,
+    app.bootstrap().then(_startScheduler, _connectionFailed);
+}
+
+function _connectionFailed(err) {
+    console.error(util.format(err.stack));
+}
+
+function _startScheduler(instance) {
+    var config = instance.get('config');
+
+    console.log("current configuration: \n", util.format(config));
+
+    var schedule = new Agenda({
+        db: {
+            address: config.mongo.address,
             collection: 'agenda.jobs'
-        }});
-        scheduleLogger("configuring grabbing job...");
+        }
+    });
+    console.log("configuring grabbing job...");
 
-        schedule.every('one minute', 'grab words');
-        //schedule.every('one day', 'grab words');
+    schedule.define('grab words', _grabWordsJob);
 
-        schedule.define('grab words', function(job, done) {
-            scheduleLogger("start grabbing job...");
-            grabber.fetch(instance).then(function (result) {
-                scheduleLogger("start grabbing job...");
-                // todo: save to database
-            });
-        });
+    //schedule.every('one day', 'grab words');
+    schedule.every('30 seconds', 'grab words');
+
+    schedule.start();
+}
+
+function _grabWordsJob(job, done) {
+    console.log("start grabbing job...");
+    grabber.fetch(instance).then(function (result) {
+        console.log("finish grabbing job...");
+        done();
+        // todo: save to database
+    }, function (err) {
+        console.log("error occurs during grabbing job.", util.format(err));
+        done(err);
     });
 }
