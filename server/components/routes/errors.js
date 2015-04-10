@@ -19,7 +19,7 @@ function _init(instance) {
     var config = instance.get('config');
 
     // catch 404 and forward to error handler
-    app.use(function (req, res, next) {
+    app.use(function _notFound(req, res, next) {
         var err = new Error('Not Found');
         err.status = 404;
         next(err);
@@ -27,7 +27,7 @@ function _init(instance) {
 
     // error handlers
 
-    app.use(function (err, req, res, next) {
+    app.use(function _internalError(err, req, res, next) {
         errors("Internal error: \n", util.format(err.stack));
         next(err);
     });
@@ -35,7 +35,7 @@ function _init(instance) {
     // development error handler
     // will print stacktrace
     if (config.isDebug(app.get('env'))) {
-        app.use(function (err, req, res, next) {
+        app.use(function _sendDebugInternalError(err, req, res, next) {
             res.status(err.status || 500);
             res.send({
                 message: err.message,
@@ -46,7 +46,7 @@ function _init(instance) {
 
     // production error handler
     // no stacktraces leaked to user
-    app.use(function (err, req, res, next) {
+    app.use(function _sendInternalError(err, req, res, next) {
         res.status(err.status || 500);
         res.send({
             message: err.message,

@@ -14,7 +14,7 @@ function _bootstrap(instance) {
     var app = instance.get('app');
     var storage = instance.get('storage');
 
-    app.use('*', function (req, res, next) {
+    app.use('*', function _isAuthenticated(req, res, next) {
         req.userId = _.random(1, 4); // todo: provide real userId
         req.user = _getUser.call(storage, req.userId);
         next();
