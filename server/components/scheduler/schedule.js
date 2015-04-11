@@ -6,7 +6,6 @@ var util = require('util');
 // app dependencies
 
 var app = require('../../app');
-var grabber = require('./grabber');
 
 // initialization
 
@@ -22,27 +21,40 @@ function _startScheduler(instance) {
     var schedule = new Agenda({
         db: {
             address: config.mongo.address,
-            collection: 'agenda.jobs'
+            collection: 'jobs'
         }
     });
-    console.log("configuring grabbing job...");
+    console.log("configuring jobs...");
 
-    schedule.define('grab words', function _grabWordsJob(job, done) {
-        console.log("start grabbing job...");
-        grabber.fetch(instance).then(function (result) {
-            console.log("finish grabbing job...");
-            done();
-            // todo: save to database
-        }, function (err) {
-            console.log("error occurs during grabbing job.", util.format(err));
-            done(err);
-        });
-    });
-
-    //schedule.every('one day', 'grab words');
-    schedule.every('30 seconds', 'grab words');
+    _configureJobs.call(schedule, instance);
 
     schedule.start();
+}
+
+function _configureJobs(instance) {
+    var schedule = this;
+
+    var tasks = require('./tasks');
+
+    tasks.forEach(function (task) {
+        schedule.define(task.name, function job(job, done) {
+            console.log("job '" + task.name + "' was started");
+            var taskResult = task.action(instance);
+            _processTask(taskResult, done);
+        });
+
+        schedule.every(task.period, task.name);
+    });
+}
+
+function _processTask(taskResult, done) {
+    taskResult.then(function (result) {
+        console.log("job was finished");
+        done();
+    }, function (err) {
+        console.log("error occurs during job.", util.format(err));
+        done(err);
+    });
 }
 
 function _connectionFailed(err) {

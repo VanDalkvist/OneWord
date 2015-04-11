@@ -14,7 +14,7 @@ var config = require('./bin/config');
 var DB = require('./components/core/db');
 var DI = require('./components/core/di');
 
-var job = require('./components/job');
+var job = require('./components/scheduler');
 
 var StorageFactory = require('./components/storage/storage.factory');
 
@@ -33,7 +33,7 @@ module.exports.bootstrap = _bootstrap;
 // private functions
 
 function _run() {
-    job.start('./server/components/job/schedule');
+    job.start('./server/components/scheduler/schedule');
 
     return _build()
         .then(function (di) {
