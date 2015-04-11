@@ -17,9 +17,25 @@ function _grabWords(instance, options) {
     var grabber = require('./grabber');
     console.log("start grabbing job...");
 
-    return grabber.fetch(instance, options).then(function (result) {
-        _insertWords(instance.get('db'), result);
+    var db = instance.get('db');
+
+    var deferred = Q.defer();
+    db.collection('words').remove({}, function (err, res) {
+        if (err) {
+            console.log("error during removing: ", util.format(err.stack));
+            deferred.reject(err);
+            return;
+        }
+        console.log("successfully inserted.");
+        return grabber.fetch(instance, options).then(function (result) {
+            return _insertWords(db, result);
+        }).then(function (res) {
+            deferred.resolve(res);
+        }, function (err) {
+            deferred.reject(err);
+        });
     });
+    return deferred.promise;
 }
 
 function _insertWords(db, result) {
