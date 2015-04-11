@@ -19,7 +19,6 @@ function _fetch(instance, options) {
     var countWords = options.count;
 
     var config = instance.get('config');
-    var db = instance.get('db');
     var api = config.api;
 
     var optionsBuilder = {
