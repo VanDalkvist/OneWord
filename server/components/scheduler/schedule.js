@@ -8,6 +8,9 @@ var _ = require('lodash');
 
 var app = require('../../app');
 
+var taskDescriptions = require('./tasks.config.json');
+var tasks = require('./tasks');
+
 // initialization
 
 app.bootstrap().then(_startScheduler, _connectionFailed);
@@ -25,7 +28,6 @@ function _startScheduler(instance) {
             collection: 'jobs'
         }
     });
-    console.log("configuring jobs...");
 
     _configureJobs.call(schedule, instance);
 
@@ -33,10 +35,8 @@ function _startScheduler(instance) {
 }
 
 function _configureJobs(instance) {
+    console.log("configuring jobs...");
     var schedule = this;
-
-    var taskDescriptions = require('./tasks.config.json');
-    var tasks = require('./tasks');
 
     _.forEach(taskDescriptions, function (task, name) {
         schedule.define(name, function job(job, done) {
@@ -50,7 +50,7 @@ function _configureJobs(instance) {
 }
 
 function _processTask(taskResult, done) {
-    taskResult.then(function (result) {
+    return taskResult.then(function (result) {
         console.log("job was finished");
         done();
     }, function (err) {

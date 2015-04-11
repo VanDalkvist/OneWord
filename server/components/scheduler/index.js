@@ -14,8 +14,7 @@ module.exports.start = _start;
 // private methods
 
 function _start(path) {
-    // todo: set debug from config
-    var child = childProcess.exec('node ' + path + ' --debug-brk=53000');
+    var child = childProcess.exec('node ' + path); // debug option ' --debug-brk=53000' todo: set debug from config
     child.on('error', function (data) {
         scheduleErrors('error: ' + data);
     });
@@ -25,7 +24,6 @@ function _start(path) {
     child.stderr.on('data', function (data) {
         scheduleErrors('stderr: ' + data);
     });
-
     child.on('close', function (code) {
         scheduleLogger('closing code: ' + code);
     });
