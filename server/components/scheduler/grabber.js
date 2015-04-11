@@ -12,10 +12,14 @@ module.exports.fetch = _fetch;
 
 // private methods
 
-function _fetch(instance) {
+function _fetch(instance, options) {
+
+    // setting defaults
+    options = options || {count: 5};
+    var countWords = options.count;
+
     var config = instance.get('config');
     var db = instance.get('db');
-
     var api = config.api;
 
     var optionsBuilder = {
@@ -24,36 +28,45 @@ function _fetch(instance) {
         prod: _getOptions
     };
 
-    var deferred = Q.defer();
+    return Q.all(_.map(_.range(countWords), _buildWordPromise));
 
-    var queryString = '/api/words/random';
-    var random =
-        http
-            .get(_buildOptions(queryString), _produceRandomWord)
-            .on('error', _errCallback);
+    function _buildWordPromise() {
+        var deferred = Q.defer();
 
-    return deferred.promise;
+        var queryString = '/api/words/random';
+        var random =
+            http
+                .get(_buildOptions(queryString), _getProduceRandomWordCallback(deferred))
+                .on('error', _getErrCallback(deferred));
 
-    function _produceRandomWord(res) {
-        _parseBody(res).then(_getWordDefinitions);
+        return deferred.promise;
     }
 
-    function _getWordDefinitions(randomWord) {
-        var word = randomWord.word; // todo: use in real api
-        http
-            .get(_buildOptions(queryString), _getFullWord)
-            .on('error', _errCallback);
+    function _getProduceRandomWordCallback(deferred) {
+        var queryString = '/api/words/random';
+        return function _produceRandomWord(res) {
+            _parseBody(res).then(function _getWordDefinitions(randomWord) {
+                var word = randomWord.word; // todo: use in real api
+                http
+                    .get(_buildOptions(queryString), _getProcessFullWordCallback(deferred))
+                    .on('error', _getErrCallback(deferred));
+            });
+        }
     }
 
-    function _getFullWord(res) {
-        _parseBody(res).then(function (word) {
-            deferred.resolve(word);
-        });
+    function _getProcessFullWordCallback(deferred) {
+        return function _getFullWord(res) {
+            _parseBody(res).then(function (word) {
+                deferred.resolve(word);
+            });
+        }
     }
 
-    function _errCallback(err) {
-        console.log('Error: ', err);
-        deferred.reject(err);
+    function _getErrCallback(deferred) {
+        return function _errCallback(err) {
+            console.log('Error: ', err);
+            deferred.reject(err);
+        }
     }
 
     function _parseBody(res) {

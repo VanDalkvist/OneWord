@@ -1,0 +1,8 @@
+{
+  "grab words": {
+    "period": "30 seconds",
+    "options": {
+      "count": 10
+    }
+  }
+}
