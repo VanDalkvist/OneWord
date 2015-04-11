@@ -64,7 +64,7 @@ function _fetch(instance) {
         });
         res.on('end', function () {
             res.body = JSON.parse(body);
-            deferred.resolve(body);
+            deferred.resolve(res.body);
         });
         res.on('error', function (err) {
             deferred.reject(err);
