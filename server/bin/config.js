@@ -10,7 +10,7 @@ function _buildConfig() {
             "uri": process.env.MONGOLAB_URI || process.env.MONGOHQ_URL
             || process.env.OPENSHIFT_MONGODB_DB_URL
             || 'mongodb://localhost:27017/one-word',
-            "address": 'localhost:27017/one-word' // todo: configure config for prod
+            "address": 'localhost:27017/one-word' // todo: configure address for prod
         },
         "port": (process.env.ENV === 'test') ? 3001 : (process.env.PORT || 3000),
         "isDebug": _isDebug.bind(this),
