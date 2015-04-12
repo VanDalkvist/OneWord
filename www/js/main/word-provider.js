@@ -1,46 +1,50 @@
-angular.module('one-word')
-    .factory('WordProvider', Factory);
+(function () {
 
-//Factory.$inject = ['Storage'];
+    'use strict';
 
-function Factory() {
-    var words = [], current, prev, next;
-    var history = [];
+    angular.module('one-word').factory('WordProvider', Factory);
 
-    return {
-        sync: _sync
-    };
+    //Factory.$inject = ['Storage'];
 
-    function _sync() {
-        return Storage.query(function (data) {
-            words = data;
+    function Factory() {
+        var words = [], current, prev, next;
+        var history = [];
 
-            return {
-                current: _current,
-                next: _next,
-                previous: _previous
-            };
-        });
+        return {
+            sync: _sync
+        };
+
+        function _sync() {
+            return Storage.query(function (data) {
+                words = data;
+
+                return {
+                    current: _current,
+                    next: _next,
+                    previous: _previous
+                };
+            });
+        }
+
+        function _current() {
+            return current;
+        }
+
+        function _next() {
+            history.push(angular.copy(prev));
+            prev = current;
+            var toBeCurrent = angular.copy(next);
+            Storage.get(function (res) {
+                next = res;
+            });
+            return toBeCurrent;
+        }
+
+        function _previous() {
+            next = angular.copy(current);
+            current = angular.copy(prev);
+            prev = history.pop();
+            return current;
+        }
     }
-
-    function _current() {
-        return current;
-    }
-
-    function _next() {
-        history.push(angular.copy(prev));
-        prev = current;
-        var toBeCurrent = angular.copy(next);
-        Storage.get(function (res) {
-            next = res;
-        });
-        return toBeCurrent;
-    }
-
-    function _previous() {
-        next = angular.copy(current);
-        current = angular.copy(prev);
-        prev = history.pop();
-        return current;
-    }
-}
+})();

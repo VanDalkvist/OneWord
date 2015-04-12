@@ -1,33 +1,15 @@
-angular.module('one-word').service('Storage', Storage);
+(function () {
 
-Storage.$inject = ['$q', 'Word'];
+    'use strict';
 
-function Storage($q, Word) {
+    angular.module('one-word').service('Storage', Storage);
 
-    var entities = [];
+    Storage.$inject = ['$q', 'Word'];
 
-    var WordMock = {
-        get: function () {
-            return {
-                $promise: $q.when({
-                    name: 'testWord',
-                    definition: 'This is test definition of testWord',
-                    examples: [
-                        {content: 'This is example 1'},
-                        {content: 'This is example 2'}
-                    ]
-                })
-            };
-        },
-        all: function () {
-            return entities;
-        },
-        add: function (entity) {
-            entities.push(entity);
-        }
-    };
+    function Storage($q, Word) {
+        // todo: implement storage in the localStorage;
+        // todo: merge with WordProvider
 
-    //return WordMock;
-
-    return Word;
-}
+        return Word;
+    }
+})();

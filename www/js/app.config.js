@@ -1,9 +1,13 @@
 (function () {
+
     'use strict';
 
-    var app = angular.module('one-word', ['ionic', 'ngResource', 'LocalStorageModule']);
+    var app = angular.module('one-word', [
+        'ionic', 'ngResource', 'LocalStorageModule'
+    ]);
 
     app.config(_config);
+
     _config.$inject = ['$httpProvider', '$stateProvider', '$urlRouterProvider', 'SettingsProvider'];
 
     function _config($httpProvider, $stateProvider, $urlRouterProvider, SettingsProvider) {

@@ -2,8 +2,7 @@
 
     'use strict';
 
-    angular.module('one-word')
-        .provider('Settings', SettingsProvider);
+    angular.module('one-word').provider('Settings', SettingsProvider);
 
     SettingsProvider.$inject = [];
 

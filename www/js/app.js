@@ -1,5 +1,7 @@
-angular.module('one-word')
-    .run(function ($ionicPlatform) {
+(function () {
+    'use strict';
+
+    angular.module('one-word').run(function ($ionicPlatform) {
         $ionicPlatform.ready(function () {
             // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
             // for form inputs)
@@ -12,3 +14,4 @@ angular.module('one-word')
             }
         });
     });
+})();

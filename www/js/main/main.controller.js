@@ -1,7 +1,7 @@
-(function (app) {
+(function () {
     'use strict';
 
-    app.controller("MainCtrl", Controller);
+    angular.module('one-word').controller("MainCtrl", Controller);
 
     Controller.$inject = ['$scope'];
 
@@ -15,4 +15,4 @@
 
         // private functions
     }
-})(angular.module('one-word'));
+})();
