@@ -31,7 +31,7 @@ function Factory() {
         history.push(angular.copy(prev));
         prev = current;
         var toBeCurrent = angular.copy(next);
-        Word.get(function (res) {
+        Storage.get(function (res) {
             next = res;
         });
         return toBeCurrent;
