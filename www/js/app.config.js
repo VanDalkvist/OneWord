@@ -4,19 +4,18 @@
     var app = angular.module('one-word', ['ionic', 'ngResource', 'LocalStorageModule']);
 
     app.config(_config);
-    //app.config(['$httpProvider', function($httpProvider) {
-    //    $httpProvider.defaults.useXDomain = true;
-    //    delete $httpProvider.defaults.headers.common['X-Requested-With'];
-    //}
-    //]);
-    _config.$inject = ['$stateProvider', '$urlRouterProvider', 'SettingsProvider'];
+    _config.$inject = ['$httpProvider', '$stateProvider', '$urlRouterProvider', 'SettingsProvider'];
 
-    function _config($stateProvider, $urlRouterProvider, SettingsProvider) {
+    function _config($httpProvider, $stateProvider, $urlRouterProvider, SettingsProvider) {
+
+        // todo: check it
+        $httpProvider.defaults.useXDomain = true;
+        delete $httpProvider.defaults.headers.common['X-Requested-With'];
 
         $urlRouterProvider.otherwise('/current');
 
         // todo: configure server url
-        //SettingsProvider.init('http://localhost:3000');
+        SettingsProvider.init('http://localhost:3000');
 
         // initialization
 
@@ -24,16 +23,17 @@
             .state('current', {
                 url: "/current",
                 templateUrl: "js/word/word.html",
-                controller: 'WordCtrl',
-                resolve: {
-                    word: ['Storage', function (Storage) {
-                        return Storage.get().$promise.then(function (word) {
-                            return word;
-                        }, function () {
-                            return '';
-                        });
-                    }]
-                }
+                controller: 'WordCtrl' //,
+                // todo: resolve current word from Local Storage
+                //resolve: {
+                //    word: ['Storage', function (Storage) {
+                //        return Storage.get().$promise.then(function (word) {
+                //            return word;
+                //        }, function () {
+                //            return '';
+                //        });
+                //    }]
+                //}
             });
     }
 })();
