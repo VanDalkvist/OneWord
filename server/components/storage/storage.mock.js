@@ -87,90 +87,90 @@ function Storage() {
                 definition: 'it\'s a definition',
                 number: 0,
                 examples: [
-                    'it is example 1',
-                    'it is example 2',
-                    'it is example 3'
+                    'it\'s an example 1',
+                    'it\'s an example 2',
+                    'it\'s an example 3'
                 ]
             }, {
                 name: 'hello',
                 definition: 'it\'s a definition of hello',
                 number: 1,
                 examples: [
-                    'it is example 1',
-                    'it is example 2',
-                    'it is example 3'
+                    'it\'s an example 1',
+                    'it\'s an example 2',
+                    'it\'s an example 3'
                 ]
             }, {
                 name: 'critical',
                 definition: 'it\'s a definition of critical',
                 number: 2,
                 examples: [
-                    'it is example 1',
-                    'it is example 2',
-                    'it is example 3'
+                    'it\'s an example 1',
+                    'it\'s an example 2',
+                    'it\'s an example 3'
                 ]
             }, {
                 name: 'apple',
                 definition: 'it\'s a definition of apple',
                 number: 3,
                 examples: [
-                    'it is example 1',
-                    'it is example 2',
-                    'it is example 3'
+                    'it\'s an example 1',
+                    'it\'s an example 2',
+                    'it\'s an example 3'
                 ]
             }, {
                 name: 'magic',
                 definition: 'it\'s a definition of magic',
                 number: 4,
                 examples: [
-                    'it is example 1',
-                    'it is example 2',
-                    'it is example 3'
+                    'it\'s an example 1',
+                    'it\'s an example 2',
+                    'it\'s an example 3'
                 ]
             }, {
                 name: 'man',
                 definition: 'it\'s a definition of man',
                 number: 5,
                 examples: [
-                    'it is example 1',
-                    'it is example 2',
-                    'it is example 3'
+                    'it\'s an example 1',
+                    'it\'s an example 2',
+                    'it\'s an example 3'
                 ]
             }, {
                 name: 'grunt',
                 definition: 'it\'s a definition of grunt',
                 number: 6,
                 examples: [
-                    'it is example 1',
-                    'it is example 2',
-                    'it is example 3'
+                    'it\'s an example 1',
+                    'it\'s an example 2',
+                    'it\'s an example 3'
                 ]
             }, {
                 name: 'baby',
                 definition: 'it\'s a definition of baby',
                 number: 7,
                 examples: [
-                    'it is example 1',
-                    'it is example 2',
-                    'it is example 3'
+                    'it\'s an example 1',
+                    'it\'s an example 2',
+                    'it\'s an example 3'
                 ]
             }, {
                 name: 'blog',
                 definition: 'it\'s a definition of blog',
                 number: 8,
                 examples: [
-                    'it is example 1',
-                    'it is example 2',
-                    'it is example 3'
+                    'it\'s an example 1',
+                    'it\'s an example 2',
+                    'it\'s an example 3'
                 ]
             }, {
                 name: 'woman',
                 definition: 'it\'s a definition of woman',
                 number: 9,
                 examples: [
-                    'it is example 1',
-                    'it is example 2',
-                    'it is example 3'
+                    'it\'s an example 1',
+                    'it\'s an example 2',
+                    'it\'s an example 3'
                 ]
             }
         ];
