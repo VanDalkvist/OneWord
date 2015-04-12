@@ -27,7 +27,7 @@ function Storage($q, Word) {
         }
     };
 
-    return WordMock;
+    //return WordMock;
 
-    //return Word;
+    return Word;
 }
