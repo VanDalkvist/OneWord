@@ -84,7 +84,7 @@ function Storage() {
         return [
             {
                 name: 'word',
-                definition: 'it is definition',
+                definition: 'it\'s a definition',
                 number: 0,
                 examples: [
                     'it is example 1',
@@ -93,7 +93,7 @@ function Storage() {
                 ]
             }, {
                 name: 'hello',
-                definition: 'it is definition of hello',
+                definition: 'it\'s a definition of hello',
                 number: 1,
                 examples: [
                     'it is example 1',
@@ -102,7 +102,7 @@ function Storage() {
                 ]
             }, {
                 name: 'critical',
-                definition: 'it is definition of critical',
+                definition: 'it\'s a definition of critical',
                 number: 2,
                 examples: [
                     'it is example 1',
@@ -111,7 +111,7 @@ function Storage() {
                 ]
             }, {
                 name: 'apple',
-                definition: 'it is definition of apple',
+                definition: 'it\'s a definition of apple',
                 number: 3,
                 examples: [
                     'it is example 1',
@@ -120,7 +120,7 @@ function Storage() {
                 ]
             }, {
                 name: 'magic',
-                definition: 'it is definition of magic',
+                definition: 'it\'s a definition of magic',
                 number: 4,
                 examples: [
                     'it is example 1',
@@ -129,7 +129,7 @@ function Storage() {
                 ]
             }, {
                 name: 'man',
-                definition: 'it is definition of man',
+                definition: 'it\'s a definition of man',
                 number: 5,
                 examples: [
                     'it is example 1',
@@ -138,7 +138,7 @@ function Storage() {
                 ]
             }, {
                 name: 'grunt',
-                definition: 'it is definition of grunt',
+                definition: 'it\'s a definition of grunt',
                 number: 6,
                 examples: [
                     'it is example 1',
@@ -147,7 +147,7 @@ function Storage() {
                 ]
             }, {
                 name: 'baby',
-                definition: 'it is definition of baby',
+                definition: 'it\'s a definition of baby',
                 number: 7,
                 examples: [
                     'it is example 1',
@@ -156,7 +156,7 @@ function Storage() {
                 ]
             }, {
                 name: 'blog',
-                definition: 'it is definition of blog',
+                definition: 'it\'s a definition of blog',
                 number: 8,
                 examples: [
                     'it is example 1',
@@ -165,7 +165,7 @@ function Storage() {
                 ]
             }, {
                 name: 'woman',
-                definition: 'it is definition of woman',
+                definition: 'it\'s a definition of woman',
                 number: 9,
                 examples: [
                     'it is example 1',
