@@ -10,8 +10,6 @@
 
         // initialization
 
-        // todo: implement storage in the localStorage
-
         // public functions
 
         this.set = _set;
