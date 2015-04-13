@@ -8,9 +8,9 @@
 
     app.config(_config);
 
-    _config.$inject = ['$httpProvider', '$stateProvider', '$urlRouterProvider', 'SettingsProvider'];
+    _config.$inject = ['$httpProvider', '$stateProvider', '$urlRouterProvider'];
 
-    function _config($httpProvider, $stateProvider, $urlRouterProvider, SettingsProvider) {
+    function _config($httpProvider, $stateProvider, $urlRouterProvider) {
 
         // todo: check it
         $httpProvider.defaults.useXDomain = true;
@@ -18,11 +18,9 @@
 
         $urlRouterProvider.otherwise('/current');
 
-        // todo: configure server url
-        SettingsProvider.init('http://localhost:3000');
-
         // initialization
 
+        // todo: move to concrete subfolder
         $stateProvider
             .state('current', {
                 url: "/current",
