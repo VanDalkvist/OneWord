@@ -4,9 +4,9 @@
 
     angular.module('one-word').factory('WordProvider', Factory);
 
-    Factory.$inject = ['$q', 'Storage'];
+    Factory.$inject = ['$q', 'Word', 'Storage'];
 
-    function Factory($q, Storage) {
+    function Factory($q, Word, Storage) {
         var keysHash = {
             current: 'words:current',
             prev: 'words:prev',
@@ -15,33 +15,39 @@
         };
 
         return {
-            sync: _sync
+            current: _current,
+            next: _next,
+            previous: _previous
         };
 
-        function _sync() {
-            return Storage.query(function (data) {
-                words = data;
+        /**
+         * 1. get from cache if exist
+         * 2. if no - get by Word resource
+         * 3. put into cache
+         * 4. generate next
+         * @returns {Promise}
+         * @private
+         */
+        function _current() {
+            var current = Storage.get(keysHash.current);
+            if (!!current) return $q.when(current);
 
-                return {
-                    current: _current,
-                    next: _next,
-                    previous: _previous
-                };
+            // todo: check current count for max value exceeded
+            return Word.get().$promise.then(function _fillCache(word) {
+                Storage.set(keysHash.current, word);
+
+                // todo: add checking to uniqueness.
+                _generateNext();
+
+                return word;
             });
         }
 
         /**
-         * todo:
-         * 1. get from cache if exist
-         * 2. if no - get by Word resource
-         * 3. put into cache
-         * @returns {*}
+         *
+         * @returns {Promise}
          * @private
          */
-        function _current() {
-            return $q.when(Storage.get(keysHash.current));
-        }
-
         function _next() {
             var current = Storage.get(keysHash.current);
             var prev = Storage.get(keysHash.prev);
@@ -52,8 +58,7 @@
             var toBeCurrent = Storage.get(keysHash.next);
             Storage.set(keysHash.current, toBeCurrent);
 
-            // todo: generate next
-            // Storage.set(keysHash.next, next);
+            _generateNext();
 
             return $q.when(toBeCurrent);
         }
@@ -71,6 +76,13 @@
             // Storage.set(keysHash.prev, prev);
 
             return $q.when(toBeCurrent);
+        }
+
+        function _generateNext() {
+            return Word.get().$promise.then(function (word) {
+                Storage.set(keysHash.next, word);
+                return word;
+            });
         }
     }
 })();
