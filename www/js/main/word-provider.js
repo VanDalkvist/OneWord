@@ -46,7 +46,6 @@
             var current = Storage.get(keysHash.current);
             var prev = Storage.get(keysHash.prev);
 
-            // todo: implement push/pop/pull to/from array
             Storage.push(keysHash.history, prev);
             Storage.set(keysHash.prev, current);
 

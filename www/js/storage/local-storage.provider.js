@@ -4,9 +4,9 @@
 
     angular.module('one-word').factory('LocalStorage', LocalStorageFactory);
 
-    LocalStorageFactory.$inject = [];
+    LocalStorageFactory.$inject = ['localStorageService'];
 
-    function LocalStorageFactory() {
+    function LocalStorageFactory(localStorageService) {
 
         // initialization
 
@@ -16,35 +16,38 @@
 
         this.set = _set;
         this.get = _get;
-        this.add = _add;
         this.pull = _pull;
         this.pop = _pop;
         this.push = _push;
 
         // private functions
 
-        function _get() {
-
+        function _get(key) {
+            return localStorageService.get(key);
         }
 
-        function _set() {
-
+        function _set(key, value) {
+            return localStorageService.set(key, value);
         }
 
-        function _add() {
-
+        function _pull(key) {
+            // todo: add check for array
+            var array = _get(key);
+            return array.pop();
         }
 
-        function _pull() {
-
+        function _pop(key) {
+            // todo: add check for array
+            var array = _get(key);
+            var element = array.pop();
+            _set(key, array);
+            return element;
         }
 
-        function _pop() {
-
-        }
-
-        function _push() {
-
+        function _push(key, value) {
+            var array = _get(key) || [];
+            array.push(value);
+            _set(key, array);
         }
     }
 })();
