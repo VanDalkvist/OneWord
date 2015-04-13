@@ -3,11 +3,11 @@
 
     angular.module('one-word').config(_config);
 
-    _config.$inject = ['SettingsProvider'];
+    _config.$inject = ['EnvironmentProvider'];
 
-    function _config(SettingsProvider) {
+    function _config(EnvironmentProvider) {
         // todo: configure server url
-        SettingsProvider.setServerUrl('http://localhost:3000');
-        SettingsProvider.setStorage('LocalStorage');
+        EnvironmentProvider.setServerUrl('http://localhost:3000');
+        EnvironmentProvider.setStorage('LocalStorage');
     }
 })();

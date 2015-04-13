@@ -4,10 +4,10 @@
 
     angular.module('one-word').service('Storage', StorageService);
 
-    StorageService.$inject = ['Settings'];
+    StorageService.$inject = ['Environment'];
 
-    function StorageService(Settings) {
-        var storage = Settings.storage();
+    function StorageService(Environment) {
+        var storage = Environment.storage();
         if (!storage || !storage.type)
             throw new Error("No storage was configured.");
 

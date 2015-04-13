@@ -2,11 +2,11 @@
 
     'use strict';
 
-    angular.module('one-word').provider('Settings', SettingsProvider);
+    angular.module('one-word').provider('Environment', Provider);
 
-    SettingsProvider.$inject = [];
+    Provider.$inject = [];
 
-    function SettingsProvider() {
+    function Provider() {
         // initialization
 
         var mainModuleName = 'one-word';
