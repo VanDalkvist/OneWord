@@ -3,9 +3,19 @@
 
     angular.module('one-word').controller("WordCtrl", Controller);
 
-    Controller.$inject = ['$scope', '$timeout', '$ionicSlideBoxDelegate', 'Storage'];
+    Controller.$inject = ['$scope', '$timeout', '$ionicSlideBoxDelegate', 'WordProvider', 'word'];
 
-    function Controller($scope, $timeout, $ionicSlideBoxDelegate, Storage) {
+    function Controller($scope, $timeout, $ionicSlideBoxDelegate, WordProvider, word) {
+
+        // todo: try controllerAs syntax
+
+        // view model
+
+        $scope.vm = {
+            prev: undefined,
+            current: word,
+            next: undefined
+        };
 
         // initialization
 
@@ -13,17 +23,15 @@
 
         // public functions
 
-        $scope.next = _next;
-        $scope.previous = _previous;
+        $scope.actions = {
+            next: _next,
+            previous: _previous
+        };
 
         // private functions
 
         function _init() {
-            $scope.words = [];
-            $scope.model = {wordsCount: 0};
-
-            $scope.words.push({content: Storage.random(), number: ++$scope.model.wordsCount});
-            $scope.words.push({content: Storage.random(), number: ++$scope.model.wordsCount});
+            //$scope.model = {wordsCount: 0};
 
             $scope.slideIndex = 0;
 
@@ -41,13 +49,14 @@
 
             $timeout(function () {
                 if ($ionicSlideBoxDelegate.currentIndex() === $scope.words.length - 1) {
-                    $scope.words.push({content: Storage.random(), number: ++$scope.model.wordsCount});
+                    $scope.vm = WordProvider.next();
                     $ionicSlideBoxDelegate.update();
                 }
             });
         }
 
         function _previous() {
+            $scope.vm = WordProvider.prev();
             if ($scope.model.wordsCount >= 1) {
                 $ionicSlideBoxDelegate.enableSlide(true);
                 $ionicSlideBoxDelegate.previous();

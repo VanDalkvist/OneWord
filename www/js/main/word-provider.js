@@ -15,9 +15,9 @@
         };
 
         return {
-            current: _current,
-            next: _next,
-            previous: _previous
+            current: _currentState,
+            next: _nextState,
+            previous: _previousState
         };
 
         /**
@@ -28,42 +28,42 @@
          * @returns {Promise}
          * @private
          */
-        function _current() {
+        function _currentState() {
             var current = Storage.get(keysHash.current);
-            if (!!current) return $q.when(current);
+            var prev = Storage.get(keysHash.prev);
+            var next = Storage.get(keysHash.next);
+
+            if (!!current) return $q.when({current: current, prev: prev, next: next});
 
             // todo: check current count for max value exceeded
-            return Word.get().$promise.then(function _fillCache(word) {
+            var wordPromise = Word.get().$promise.then(function _fillCache(word) {
                 Storage.set(keysHash.current, word);
-
-                // todo: add checking to uniqueness.
-                _generateNext();
-
                 return word;
+            });
+
+            // todo: add checking to uniqueness.
+            var nextPromise = _generateNext();
+
+            return $q.all({current: wordPromise, next: nextPromise}).then(function (result) {
+                angular.extend(result, {prev: undefined});
             });
         }
 
-        /**
-         *
-         * @returns {Promise}
-         * @private
-         */
-        function _next() {
-            var current = Storage.get(keysHash.current);
-            var prev = Storage.get(keysHash.prev);
+        function _nextState() {
+            Storage.push(keysHash.history, Storage.get(keysHash.prev));
 
-            Storage.push(keysHash.history, prev);
-            Storage.set(keysHash.prev, current);
+            var toBePrev = Storage.get(keysHash.current);
+            Storage.set(keysHash.prev, toBePrev);
 
             var toBeCurrent = Storage.get(keysHash.next);
             Storage.set(keysHash.current, toBeCurrent);
 
-            _generateNext();
-
-            return $q.when(toBeCurrent);
+            return _generateNext().then(function (toBeNext) {
+                return $q.when({current: toBeCurrent, prev: toBePrev, next: toBeNext});
+            });
         }
 
-        function _previous() {
+        function _previousState() {
             var toBeNext = Storage.get(keysHash.current);
             Storage.set(keysHash.next, toBeNext);
 
@@ -72,10 +72,9 @@
 
             var toBeCurrent = Storage.pop(keysHash.history);
 
-            // todo: generate prev
-            // Storage.set(keysHash.prev, prev);
+            var toBePrev = Storage.pull(keysHash.history);
 
-            return $q.when(toBeCurrent);
+            return $q.when({current: toBeCurrent, prev: toBePrev, next: toBeNext});
         }
 
         function _generateNext() {
