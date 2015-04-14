@@ -1,12 +1,12 @@
 (function () {
     'use strict';
 
-    angular.module('one-word').config(_config);
+    angular.module('one-word').config(Config);
 
-    _config.$inject = ['EnvironmentProvider'];
+    Config.$inject = ['EnvironmentProvider'];
 
-    function _config(EnvironmentProvider) {
-        // todo: configure server url
+    function Config(EnvironmentProvider) {
+        // todo: configure server url by gulp task
         EnvironmentProvider.setServerUrl('http://localhost:3000');
         EnvironmentProvider.setStorage('LocalStorage');
     }

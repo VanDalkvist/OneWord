@@ -3,19 +3,17 @@
 
     angular.module('one-word').controller("WordCtrl", Controller);
 
-    Controller.$inject = ['$scope', '$timeout', '$ionicSlideBoxDelegate', 'WordProvider', 'word'];
+    Controller.$inject = ['$scope', '$timeout', '$ionicSlideBoxDelegate', 'WordProvider'];
 
-    function Controller($scope, $timeout, $ionicSlideBoxDelegate, WordProvider, word) {
+    function Controller($scope, $timeout, $ionicSlideBoxDelegate, WordProvider) {
 
         // todo: try controllerAs syntax
 
         // view model
 
-        $scope.vm = {
-            prev: undefined,
-            current: word,
-            next: undefined
-        };
+        WordProvider.current().then(function (state) {
+            $scope.vm = state;
+        });
 
         // initialization
 

@@ -2,11 +2,11 @@
 
     'use strict';
 
-    angular.module('one-word').service('Storage', StorageService);
+    angular.module('one-word').service('Storage', Service);
 
-    StorageService.$inject = ['Environment'];
+    Service.$inject = ['Environment'];
 
-    function StorageService(Environment) {
+    function Service(Environment) {
         var storage = Environment.storage();
         if (!storage || !storage.type)
             throw new Error("No storage was configured.");
