@@ -59,10 +59,17 @@
 
             _changeSlide('next').then(function (state) {
                 // removes current 'prev' from the beginning of array
-                $scope.words.shift();
+                if ($scope.vm.prev) {
+                    $scope.words.shift();
+                    $timeout(function () {
+                        $scope.model.active = 1;
+                    });
+                }
 
                 // adds new 'next' to the end of array
                 $scope.words.push(state.next);
+
+                $scope.vm = state;
 
                 console.log("next: after: ionic - %d, count - %d", $ionicSlideBoxDelegate.currentIndex(), $scope.words.length);
             });
@@ -80,6 +87,8 @@
                 // removes current 'next' element
                 $scope.words.pop();
 
+                $scope.vm = state;
+
                 console.log("previous: after: ionic - %d, count - %d", $ionicSlideBoxDelegate.currentIndex(), $scope.words.length);
             });
         }
@@ -93,7 +102,6 @@
                 $timeout(function () {
                     $ionicSlideBoxDelegate.update();
                 });
-                $scope.vm = state;
                 return state;
             });
         }
