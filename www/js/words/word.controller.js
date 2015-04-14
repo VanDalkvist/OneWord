@@ -16,11 +16,17 @@
 
         // todo: move to directive
         $scope.$watch('vm.current', function _updateTitle(newCurrent) {
+            if (!newCurrent) return;
             $scope.model.name = newCurrent.name;
         });
 
         WordProvider.current().then(function (state) {
-            state.prev && $scope.words.push(state.prev);
+            if (!!state.prev) {
+                $scope.words.push(state.prev);
+            } else
+                $timeout(function () {
+                    $scope.model.active = 0;
+                });
             $scope.words.push(state.current);
             $scope.words.push(state.next);
 
@@ -47,7 +53,8 @@
         }
 
         function _next() {
-            console.log("ionic - " + $ionicSlideBoxDelegate.currentIndex());
+            console.log("next: before: ionic - %d, count - %d", $ionicSlideBoxDelegate.currentIndex(), $scope.words.length);
+
             if (!$scope.vm.next) return;
 
             _changeSlide('next').then(function (state) {
@@ -56,11 +63,13 @@
 
                 // adds new 'next' to the end of array
                 $scope.words.push(state.next);
+
+                console.log("next: after: ionic - %d, count - %d", $ionicSlideBoxDelegate.currentIndex(), $scope.words.length);
             });
         }
 
         function _previous() {
-            console.log("ionic - " + $ionicSlideBoxDelegate.currentIndex());
+            console.log("previous: before: ionic - %d, count - %d", $ionicSlideBoxDelegate.currentIndex(), $scope.words.length);
 
             if (!$scope.vm.prev) return;
 
@@ -70,6 +79,8 @@
 
                 // removes current 'next' element
                 $scope.words.pop();
+
+                console.log("previous: after: ionic - %d, count - %d", $ionicSlideBoxDelegate.currentIndex(), $scope.words.length);
             });
         }
 
