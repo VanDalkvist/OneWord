@@ -9,7 +9,7 @@
         $stateProvider
             .state('current', {
                 url: "/current",
-                templateUrl: "js/word/word.html",
+                templateUrl: "js/words/word.html",
                 controller: 'WordCtrl'
             });
     }
