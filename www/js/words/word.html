@@ -2,34 +2,34 @@
 
     <ion-nav-buttons side="left">
         <button class="button button-assertive button-bar"
-                ng-click="previous()" ng-show="slideIndex > 0">
+                ng-click="actions.previous()" ng-show="vm.prev">
             Previous
         </button>
     </ion-nav-buttons>
 
     <ion-nav-buttons side="right">
         <button class="button button-assertive button-bar"
-                ng-click="next(word.number)" ng-show="slideIndex != words.length">
+                ng-click="actions.next()" ng-show="vm.next">
             Next
         </button>
     </ion-nav-buttons>
 
     <ion-content class="padding">
 
-        <ion-slide-box on-slide-changed="slideChanged(index)">
+        <ion-slide-box on-slide-changed="slideChanged(index)" active-slide="model.active">
             <ion-slide ng-repeat='word in words'
-                       on-swipe-left="next()" on-swipe-right="previous()">
+                       on-swipe-left="actions.next()" on-swipe-right="actions.previous()">
 
-                <p>{{word.content.definition}}</p>
+                <p>{{word.definition}}</p>
 
                 <p>{{word.number}}</p>
 
-                Examples:
-                <ion-list>
-                    <ion-item ng-repeat="example in word.content.examples">
-                        <p>{{example}}</p>
-                    </ion-item>
-                </ion-list>
+                <!--Examples:-->
+                <!--<ion-list>-->
+                    <!--<ion-item ng-repeat="example in word.examples">-->
+                        <!--<p>{{example}}</p>-->
+                    <!--</ion-item>-->
+                <!--</ion-list>-->
 
             </ion-slide>
         </ion-slide-box>

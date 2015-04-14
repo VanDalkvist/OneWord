@@ -11,7 +11,19 @@
 
         // view model
 
+        $scope.model = {name: "", active: 1};
+        $scope.words = [];
+
+        // todo: move to directive
+        $scope.$watch('vm.current', function _updateTitle(newCurrent) {
+            $scope.model.name = newCurrent.name;
+        });
+
         WordProvider.current().then(function (state) {
+            state.prev && $scope.words.push(state.prev);
+            $scope.words.push(state.current);
+            $scope.words.push(state.next);
+
             $scope.vm = state;
         });
 
@@ -29,37 +41,50 @@
         // private functions
 
         function _init() {
-            //$scope.model = {wordsCount: 0};
-
-            $scope.slideIndex = 0;
-
             $timeout(function () {
                 $ionicSlideBoxDelegate.enableSlide(false);
             });
         }
 
         function _next() {
-            $ionicSlideBoxDelegate.enableSlide(true);
-            $ionicSlideBoxDelegate.next();
-            $ionicSlideBoxDelegate.enableSlide(false);
+            console.log("ionic - " + $ionicSlideBoxDelegate.currentIndex());
+            if (!$scope.vm.next) return;
 
-            console.log("ionic - " + $ionicSlideBoxDelegate.currentIndex() + "; words = " + $scope.model.wordsCount);
+            _changeSlide('next').then(function (state) {
+                // removes current 'prev' from the beginning of array
+                $scope.words.shift();
 
-            $timeout(function () {
-                if ($ionicSlideBoxDelegate.currentIndex() === $scope.words.length - 1) {
-                    $scope.vm = WordProvider.next();
-                    $ionicSlideBoxDelegate.update();
-                }
+                // adds new 'next' to the end of array
+                $scope.words.push(state.next);
             });
         }
 
         function _previous() {
-            $scope.vm = WordProvider.prev();
-            if ($scope.model.wordsCount >= 1) {
+            console.log("ionic - " + $ionicSlideBoxDelegate.currentIndex());
+
+            if (!$scope.vm.prev) return;
+
+            _changeSlide('previous').then(function (state) {
+                // adds new 'prev' to the beginning of array
+                state.prev && $scope.words.unshift(state.prev);
+
+                // removes current 'next' element
+                $scope.words.pop();
+            });
+        }
+
+        function _changeSlide(action) {
+            return WordProvider[action]().then(function (state) {
                 $ionicSlideBoxDelegate.enableSlide(true);
-                $ionicSlideBoxDelegate.previous();
+                $ionicSlideBoxDelegate[action]();
                 $ionicSlideBoxDelegate.enableSlide(false);
-            }
+
+                $timeout(function () {
+                    $ionicSlideBoxDelegate.update();
+                });
+                $scope.vm = state;
+                return state;
+            });
         }
     }
 }());
