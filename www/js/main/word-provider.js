@@ -45,7 +45,7 @@
             var nextPromise = _generateNext();
 
             return $q.all({current: wordPromise, next: nextPromise}).then(function (result) {
-                angular.extend(result, {prev: undefined});
+                return angular.extend(result, {prev: undefined});
             });
         }
 
