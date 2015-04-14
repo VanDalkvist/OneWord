@@ -2,15 +2,16 @@
 
     'use strict';
 
-    angular.module('one-word').service('Storage', Service);
+    angular.module('one-word').factory('Storage', Service);
 
-    Service.$inject = ['Environment'];
+    Service.$inject = ['$injector', 'Environment'];
 
-    function Service(Environment) {
+    function Service($injector, Environment) {
         var storage = Environment.storage();
         if (!storage || !storage.type)
             throw new Error("No storage was configured.");
 
-        return angular.injector([storage.module]).get(storage.type);
+        // todo: inject from other module
+        return $injector.get(storage.type);
     }
 })();
