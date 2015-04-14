@@ -36,7 +36,7 @@
             if (!!current) return $q.when({current: current, prev: prev, next: next});
 
             // todo: check current count for max value exceeded
-            var wordPromise = Word.get().$promise.then(function _fillCache(word) {
+            var wordPromise = Word.random().$promise.then(function _fillCache(word) {
                 Storage.set(keysHash.current, word);
                 return word;
             });
@@ -78,7 +78,7 @@
         }
 
         function _generateNext() {
-            return Word.get().$promise.then(function (word) {
+            return Word.random().$promise.then(function (word) {
                 Storage.set(keysHash.next, word);
                 return word;
             });
