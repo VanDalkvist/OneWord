@@ -1,15 +1,15 @@
-<ion-view title="{{word.vm.current.name}}">
+<ion-view title="{{::word.vm.current.name}}">
 
     <ion-nav-buttons side="left">
-        <a class="button button-assertive button-bar" ng-show="word.vm.prev"
-           ui-sref="word({name: word.vm.prev.name, direction: 'back'})">
+        <a class="button button-assertive button-bar" ng-show="::word.vm.prev"
+           ui-sref="word(::{name: word.vm.prev.name, direction: 'back'})">
             Previous
         </a>
     </ion-nav-buttons>
 
     <ion-nav-buttons side="right">
-        <a class="button button-assertive button-bar" ng-show="word.vm.next"
-           ui-sref="word({name: word.vm.next.name, direction: 'forward'})">
+        <a class="button button-assertive button-bar" ng-show="::word.vm.next"
+           ui-sref="word(::{name: word.vm.next.name, direction: 'forward'})">
             Next
         </a>
     </ion-nav-buttons>
@@ -17,14 +17,14 @@
     <ion-content class="padding">
         <div class="card">
             <div class="item item-text-wrap">
-                <p>{{word.vm.current.definition}}</p>
+                <p>{{::word.vm.current.definition}}</p>
 
-                <p>{{word.vm.current.number}}</p>
+                <p>{{::word.vm.current.number}}</p>
 
                 Examples:
                 <ion-list>
-                    <ion-item ng-repeat="example in word.vm.current.examples">
-                        <p>{{example}}</p>
+                    <ion-item ng-repeat="example in ::word.vm.current.examples">
+                        <p>{{::example}}</p>
                     </ion-item>
                 </ion-list>
             </div>
