@@ -26,8 +26,8 @@
             .state('main', {
                 url: "/main",
                 resolve: {
-                    state: ['$state', '$stateParams', 'WordProvider', function ($state, $stateParams, WordProvider) {
-                        return WordProvider.current().then(function (state) {
+                    state: ['$state', '$stateParams', 'State', function ($state, $stateParams, State) {
+                        return State.current().then(function (state) {
                             return $state.go('word', {name: state.current.name});
                         });
                     }]
@@ -41,8 +41,8 @@
                 templateUrl: "js/words/word.html",
                 controller: 'WordCtrl as word',
                 resolve: {
-                    state: ['$stateParams', 'WordProvider', function ($stateParams, WordProvider) {
-                        return stateBuilders[$stateParams.direction].call(WordProvider);
+                    state: ['$stateParams', 'State', function ($stateParams, State) {
+                        return stateBuilders[$stateParams.direction].call(State);
                     }]
                 }
             });
