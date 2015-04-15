@@ -39,7 +39,7 @@
                     direction: 'current'
                 },
                 templateUrl: "js/words/word.html",
-                controller: 'WordCtrl',
+                controller: 'WordCtrl as word',
                 resolve: {
                     state: ['$stateParams', 'WordProvider', function ($stateParams, WordProvider) {
                         return stateBuilders[$stateParams.direction].call(WordProvider);
