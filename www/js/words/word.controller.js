@@ -3,35 +3,35 @@
 
     angular.module('one-word').controller("WordCtrl", Controller);
 
-    Controller.$inject = ['$scope', '$timeout', '$ionicSlideBoxDelegate', 'WordProvider'];
+    Controller.$inject = ['$scope', '$timeout', '$stateParams', '$state', '$ionicSlideBoxDelegate', 'WordProvider', 'state'];
 
-    function Controller($scope, $timeout, $ionicSlideBoxDelegate, WordProvider) {
+    function Controller($scope, $timeout, $stateParams, $state, $ionicSlideBoxDelegate, WordProvider, state) {
 
         // todo: try controllerAs syntax
 
         // view model
 
-        $scope.model = {name: "", active: 1};
-        $scope.words = [];
+        //$scope.model = {name: "", active: 1};
+        //$scope.words = [];
 
         // todo: move to directive
-        $scope.$watch('vm.current', function _updateTitle(newCurrent) {
-            if (!newCurrent) return;
-            $scope.model.name = newCurrent.name;
-        });
+        //$scope.$watch('vm.current', function _updateTitle(newCurrent) {
+        //    if (!newCurrent) return;
+        //    $scope.model.name = newCurrent.name;
+        //});
 
-        WordProvider.current().then(function (state) {
-            if (!!state.prev) {
-                $scope.words.push(state.prev);
-            } else
-                $timeout(function () {
-                    $scope.model.active = 0;
-                });
-            $scope.words.push(state.current);
-            $scope.words.push(state.next);
-
-            $scope.vm = state;
-        });
+        $scope.vm = state;
+        //WordProvider.current().then(function (state) {
+        //    //if (!!state.prev) {
+        //    //$scope.words.push(state.prev);
+        //    //} else
+        //    //$timeout(function () {
+        //    //    $scope.model.active = 0;
+        //    //});
+        //    //$scope.words.push(state.current);
+        //    //$scope.words.push(state.next);
+        //
+        //});
 
         // initialization
 
@@ -39,17 +39,17 @@
 
         // public functions
 
-        $scope.actions = {
-            next: _next,
-            previous: _previous
-        };
+        //$scope.actions = {
+        //    next: _next,
+        //    previous: _previous
+        //};
 
         // private functions
 
         function _init() {
-            $timeout(function () {
-                $ionicSlideBoxDelegate.enableSlide(false);
-            });
+            //$timeout(function () {
+            //    $ionicSlideBoxDelegate.enableSlide(false);
+            //});
         }
 
         function _next() {

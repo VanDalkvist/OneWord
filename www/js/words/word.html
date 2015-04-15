@@ -1,38 +1,59 @@
 <ion-view title="{{model.name}}">
 
     <ion-nav-buttons side="left">
-        <button class="button button-assertive button-bar"
-                ng-click="actions.previous()" ng-show="vm.prev">
+        <!--<button class="button button-assertive button-bar"-->
+                <!--ng-click="actions.previous()" ng-show="vm.prev">-->
+            <!--Previous-->
+        <!--</button>-->
+        <a class="button button-assertive button-bar" ng-show="vm.prev"
+           ui-sref="word({name: vm.prev.name, direction: 'back'})">
             Previous
-        </button>
+        </a>
     </ion-nav-buttons>
 
     <ion-nav-buttons side="right">
-        <button class="button button-assertive button-bar"
-                ng-click="actions.next()" ng-show="vm.next">
+        <!--<button class="button button-assertive button-bar"-->
+                <!--ng-click="actions.next()" ng-show="vm.next">-->
+            <!--Next-->
+        <!--</button>-->
+        <a class="button button-assertive button-bar" ng-show="vm.next"
+           ui-sref="word({name: vm.next.name, direction: 'forward'})">
             Next
-        </button>
+        </a>
     </ion-nav-buttons>
 
     <ion-content class="padding">
+        <!--<ion-slide-box on-slide-changed="slideChanged(index)" active-slide="model.active">-->
+            <!--<ion-slide ng-repeat='word in words'-->
+                       <!--on-swipe-left="actions.next()" on-swipe-right="actions.previous()">-->
 
-        <ion-slide-box on-slide-changed="slideChanged(index)" active-slide="model.active">
-            <ion-slide ng-repeat='word in words'
-                       on-swipe-left="actions.next()" on-swipe-right="actions.previous()">
+                <!--<p>{{word.definition}}</p>-->
 
-                <p>{{word.definition}}</p>
+                <!--<p>{{word.number}}</p>-->
 
-                <p>{{word.number}}</p>
+                <!--&lt;!&ndash;Examples:&ndash;&gt;-->
+                <!--&lt;!&ndash;<ion-list>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<ion-item ng-repeat="example in word.examples">&ndash;&gt;-->
+                        <!--&lt;!&ndash;<p>{{example}}</p>&ndash;&gt;-->
+                    <!--&lt;!&ndash;</ion-item>&ndash;&gt;-->
+                <!--&lt;!&ndash;</ion-list>&ndash;&gt;-->
 
-                <!--Examples:-->
-                <!--<ion-list>-->
-                    <!--<ion-item ng-repeat="example in word.examples">-->
-                        <!--<p>{{example}}</p>-->
-                    <!--</ion-item>-->
-                <!--</ion-list>-->
+            <!--</ion-slide>-->
+        <!--</ion-slide-box>-->
+        <div class="card">
+            <div class="item item-text-wrap">
+                <p>{{vm.current.definition}}</p>
 
-            </ion-slide>
-        </ion-slide-box>
+                <p>{{vm.current.number}}</p>
+
+                Examples:
+                <ion-list>
+                    <ion-item ng-repeat="example in vm.current.examples">
+                        <p>{{example}}</p>
+                    </ion-item>
+                </ion-list>
+            </div>
+        </div>
 
     </ion-content>
 </ion-view>
