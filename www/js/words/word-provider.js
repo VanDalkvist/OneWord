@@ -11,7 +11,7 @@
             current: 'words:current',
             prev: 'words:prev',
             next: 'words:next',
-            history: 'words:history'
+            back: 'words:back'
         };
 
         return {
@@ -51,7 +51,7 @@
 
         function _nextState() {
             var prev = Storage.get(keysHash.prev);
-            !!prev && Storage.push(keysHash.history, prev);
+            !!prev && Storage.push(keysHash.back, prev);
 
             var toBePrev = Storage.get(keysHash.current);
             Storage.set(keysHash.prev, toBePrev);
@@ -72,7 +72,7 @@
             var toBeCurrent = Storage.get(keysHash.prev);
             Storage.set(keysHash.current, toBeCurrent);
 
-            var toBePrev = Storage.pop(keysHash.history);
+            var toBePrev = Storage.pop(keysHash.back);
             Storage.set(keysHash.prev, toBePrev);
 
             return $q.when({current: toBeCurrent, prev: toBePrev, next: toBeNext});
