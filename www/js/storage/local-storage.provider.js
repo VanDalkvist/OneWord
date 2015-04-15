@@ -37,6 +37,8 @@
         function _pop(key) {
             // todo: add check for array
             var array = _get(key);
+            if (!array) return null;
+
             var element = array.pop();
             _set(key, array);
             return element;
