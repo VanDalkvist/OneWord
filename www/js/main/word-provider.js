@@ -66,14 +66,14 @@
 
         function _previousState() {
             var toBeNext = Storage.get(keysHash.current);
+            // todo: already loaded
             Storage.set(keysHash.next, toBeNext);
 
-            var prev = Storage.get(keysHash.prev);
-            Storage.set(keysHash.current, prev);
+            var toBeCurrent = Storage.get(keysHash.prev);
+            Storage.set(keysHash.current, toBeCurrent);
 
-            var toBeCurrent = Storage.pop(keysHash.history);
-
-            var toBePrev = Storage.pull(keysHash.history);
+            var toBePrev = Storage.pop(keysHash.history);
+            Storage.set(keysHash.prev, toBePrev);
 
             return $q.when({current: toBeCurrent, prev: toBePrev, next: toBeNext});
         }
