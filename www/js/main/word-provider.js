@@ -50,7 +50,8 @@
         }
 
         function _nextState() {
-            Storage.push(keysHash.history, Storage.get(keysHash.prev));
+            var prev = Storage.get(keysHash.prev);
+            !!prev && Storage.push(keysHash.history, prev);
 
             var toBePrev = Storage.get(keysHash.current);
             Storage.set(keysHash.prev, toBePrev);
