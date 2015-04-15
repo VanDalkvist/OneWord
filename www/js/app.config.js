@@ -8,13 +8,15 @@
 
     app.config(Config);
 
-    Config.$inject = ['$httpProvider', '$urlRouterProvider'];
+    Config.$inject = ['$httpProvider', '$urlRouterProvider', '$ionicConfigProvider'];
 
-    function Config($httpProvider, $urlRouterProvider) {
+    function Config($httpProvider, $urlRouterProvider, $ionicConfigProvider) {
         // todo: check it
         $httpProvider.defaults.useXDomain = true;
         delete $httpProvider.defaults.headers.common['X-Requested-With'];
 
-        $urlRouterProvider.otherwise('/current');
+        $urlRouterProvider.otherwise('/main');
+
+        $ionicConfigProvider.views.maxCache(0);
     }
 })();
