@@ -1,10 +1,6 @@
-<ion-view title="{{model.name}}">
+<ion-view title="{{vm.current.name}}">
 
     <ion-nav-buttons side="left">
-        <!--<button class="button button-assertive button-bar"-->
-                <!--ng-click="actions.previous()" ng-show="vm.prev">-->
-            <!--Previous-->
-        <!--</button>-->
         <a class="button button-assertive button-bar" ng-show="vm.prev"
            ui-sref="word({name: vm.prev.name, direction: 'back'})">
             Previous
@@ -12,10 +8,6 @@
     </ion-nav-buttons>
 
     <ion-nav-buttons side="right">
-        <!--<button class="button button-assertive button-bar"-->
-                <!--ng-click="actions.next()" ng-show="vm.next">-->
-            <!--Next-->
-        <!--</button>-->
         <a class="button button-assertive button-bar" ng-show="vm.next"
            ui-sref="word({name: vm.next.name, direction: 'forward'})">
             Next
@@ -23,23 +15,6 @@
     </ion-nav-buttons>
 
     <ion-content class="padding">
-        <!--<ion-slide-box on-slide-changed="slideChanged(index)" active-slide="model.active">-->
-            <!--<ion-slide ng-repeat='word in words'-->
-                       <!--on-swipe-left="actions.next()" on-swipe-right="actions.previous()">-->
-
-                <!--<p>{{word.definition}}</p>-->
-
-                <!--<p>{{word.number}}</p>-->
-
-                <!--&lt;!&ndash;Examples:&ndash;&gt;-->
-                <!--&lt;!&ndash;<ion-list>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<ion-item ng-repeat="example in word.examples">&ndash;&gt;-->
-                        <!--&lt;!&ndash;<p>{{example}}</p>&ndash;&gt;-->
-                    <!--&lt;!&ndash;</ion-item>&ndash;&gt;-->
-                <!--&lt;!&ndash;</ion-list>&ndash;&gt;-->
-
-            <!--</ion-slide>-->
-        <!--</ion-slide-box>-->
         <div class="card">
             <div class="item item-text-wrap">
                 <p>{{vm.current.definition}}</p>

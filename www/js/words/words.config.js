@@ -46,12 +46,5 @@
                     }]
                 }
             });
-
-        //$stateProvider
-        //    .state('current', {
-        //        url: "/current",
-        //        templateUrl: "js/words/word.html",
-        //        controller: 'WordCtrl'
-        //    });
     }
 })();
