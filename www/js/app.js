@@ -1,7 +1,13 @@
 (function () {
     'use strict';
 
-    angular.module('one-word').run(function ($ionicPlatform) {
+    angular.module('one-word').run(Run);
+
+    Run.$inject = ['$rootScope', '$log', '$ionicPlatform'];
+
+    function Run($rootScope, $log, $ionicPlatform) {
+        $rootScope.$on("$stateChangeError", $log.log.bind($log));
+
         $ionicPlatform.ready(function () {
             // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
             // for form inputs)
@@ -13,5 +19,5 @@
                 StatusBar.styleDefault();
             }
         });
-    });
+    }
 })();
