@@ -11,7 +11,9 @@
         });
 
         return {
-            random: resource.random().$promise
+            random: function () {
+                return resource.random().$promise;
+            }
         }
     }
 }());
