@@ -4,9 +4,9 @@
 
     angular.module('one-word').factory('State', Factory);
 
-    Factory.$inject = ['$q', 'Word', 'Storage'];
+    Factory.$inject = ['$q', 'ng', 'Word', 'Storage'];
 
-    function Factory($q, Word, Storage) {
+    function Factory($q, ng, Word, Storage) {
         var keysHash = {
             current: 'words:current',
             prev: 'words:prev',
@@ -46,7 +46,7 @@
             var nextPromise = _generateNext();
 
             return $q.all({current: wordPromise, next: nextPromise}).then(function (result) {
-                return angular.extend(result, {prev: undefined});
+                return ng.extend(result, {prev: undefined});
             });
         }
 
@@ -87,7 +87,7 @@
         function _nextStateCallback(state) {
             return function _next(toBeNext) {
                 Storage.set(keysHash.next, toBeNext);
-                return $q.when(angular.extend(state, {next: toBeNext}));
+                return $q.when(ng.extend(state, {next: toBeNext}));
             }
         }
     }

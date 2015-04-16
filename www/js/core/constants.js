@@ -5,4 +5,8 @@
         return uuid;
     })());
 
+    angular.module('one-word').constant('ng', (function NG() {
+        return angular;
+    })());
+
 })();
