@@ -42,11 +42,9 @@
                 return word;
             });
 
-            // todo: add checking to uniqueness.
-            var nextPromise = _generateNext();
-
-            return $q.all({current: wordPromise, next: nextPromise}).then(function (result) {
-                return ng.extend(result, {prev: undefined});
+            return wordPromise.then(function (current) {
+                var state = {current: current, prev: undefined};
+                return Word.random().$promise.then(_nextStateCallback(state));
             });
         }
 
