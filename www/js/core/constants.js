@@ -1,11 +1,11 @@
 (function () {
     'use strict';
 
-    angular.module('one-word').constant('uuid', (function Uuid() {
+    angular.module('one-word.core').constant('uuid', (function Uuid() {
         return uuid;
     })());
 
-    angular.module('one-word').constant('ng', (function NG() {
+    angular.module('one-word.core').constant('ng', (function NG() {
         return angular;
     })());
 

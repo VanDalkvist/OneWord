@@ -2,7 +2,7 @@
 
     'use strict';
 
-    angular.module('one-word').provider('Environment', Provider);
+    angular.module('one-word.core').provider('Environment', Provider);
 
     Provider.$inject = [];
 

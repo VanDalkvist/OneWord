@@ -3,7 +3,8 @@
     'use strict';
 
     var app = angular.module('one-word', [
-        'ionic', 'ngResource', 'ui.router', 'LocalStorageModule'
+        'ionic', 'ui.router',
+        'one-word.core', 'one-word.settings', 'one-word.words', 'one-word.storage'
     ]);
 
     app.config(Config);

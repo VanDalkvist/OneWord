@@ -2,7 +2,7 @@
 
     'use strict';
 
-    angular.module('one-word').controller('SettingsCtrl', Controller);
+    angular.module('one-word.settings').controller('SettingsCtrl', Controller);
 
     Controller.$inject = ['$scope', 'Settings'];
 

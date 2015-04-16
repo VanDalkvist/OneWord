@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('one-word').config(Config);
+    angular.module('one-word.core', ['ngResource']).config(Config);
 
     Config.$inject = ['EnvironmentProvider'];
 

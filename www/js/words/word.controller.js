@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('one-word').controller("WordCtrl", Controller);
+    angular.module('one-word.words').controller("WordCtrl", Controller);
 
     Controller.$inject = ['state'];
 

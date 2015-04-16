@@ -1,6 +1,6 @@
 (function () {
 
-    angular.module('one-word').factory('Word', Resource);
+    angular.module('one-word.words').factory('Word', Resource);
 
     Resource.$inject = ['$resource', 'Environment'];
 
