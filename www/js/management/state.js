@@ -2,11 +2,11 @@
 
     'use strict';
 
-    angular.module('one-word.management').factory('State', Factory);
+    angular.module('one-word.management').service('State', Service);
 
-    Factory.$inject = ['$q', 'ng', 'Word', 'Storage'];
+    Service.$inject = ['$q', 'ng', 'Word', 'Storage'];
 
-    function Factory($q, ng, Word, Storage) {
+    function Service($q, ng, Word, Storage) {
         var keysHash = {
             current: 'words:current',
             prev: 'words:prev',
@@ -15,11 +15,11 @@
             front: 'words:front'
         };
 
-        return {
-            current: _currentState,
-            next: _nextState,
-            previous: _previousState
-        };
+        // public functions
+
+        this.current = _currentState;
+        this.next = _nextState;
+        this.previous = _previousState;
 
         /**
          * 1. get 'current', 'prev', 'next' from cache
