@@ -4,9 +4,9 @@
 
     angular.module('one-word.management').service('State', Service);
 
-    Service.$inject = ['$q', 'ng', 'Word', 'Storage'];
+    Service.$inject = ['$q', 'ng', 'Word', 'Storage', 'Counts'];
 
-    function Service($q, ng, Word, Storage) {
+    function Service($q, ng, Word, Storage, Counts) {
         var keysHash = {
             current: 'words:current',
             prev: 'words:prev',

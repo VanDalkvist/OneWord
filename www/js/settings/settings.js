@@ -11,7 +11,7 @@
         // initialization
 
         var keysHash = {
-            count: 'settings:count'
+            count: 'settings:max-count'
         };
 
         // public functions
