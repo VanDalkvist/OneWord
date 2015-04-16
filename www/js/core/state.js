@@ -35,12 +35,12 @@
             if (!!current) return $q.when({current: current, prev: prev, next: next});
 
             // todo: check current count for max value exceeded
-            var wordPromise = Word.random().$promise.then(function _fillCache(word) {
+            var currentPromise = Word.random().$promise.then(function _fillCache(word) {
                 Storage.set(keysHash.current, word);
                 return word;
             });
 
-            return wordPromise.then(function (current) {
+            return currentPromise.then(function (current) {
                 var state = {current: current, prev: undefined};
                 return Word.random().$promise.then(_nextStateCallback(state));
             });
