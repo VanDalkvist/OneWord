@@ -2,7 +2,7 @@
 
     'use strict';
 
-    angular.module('one-word.core').factory('State', Factory);
+    angular.module('one-word.management').factory('State', Factory);
 
     Factory.$inject = ['$q', 'ng', 'Word', 'Storage'];
 
