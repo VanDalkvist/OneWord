@@ -22,12 +22,10 @@
         };
 
         /**
-         * 1. get from cache if exist
-         * 2. if no - get by Word resource
-         * 3. put into cache
-         * 4. generate next
+         * 1. get 'current', 'prev', 'next' from cache
+         * 2. if not exist generate and put into cache
+         * 3. generate next and put it into cache
          * @returns {Promise}
-         * @private
          */
         function _currentState() {
             var current = Storage.get(keysHash.current);
@@ -48,6 +46,14 @@
             });
         }
 
+        /**
+         * 1. get 'prev' from cache if exist and put it to 'back' history
+         * 2. put 'current' to be 'prev'
+         * 3. put 'next' to be 'current'
+         * 4. pop from 'front' history if exist and put it as 'next'
+         * 5. generate 'next' if not exists in 'front' history
+         * @returns {Promise}
+         */
         function _nextState() {
             var prev = Storage.get(keysHash.prev);
             !!prev && Storage.push(keysHash.back, prev);
@@ -65,12 +71,18 @@
             return nextPromise.then(_nextStateCallback(state));
         }
 
+        /**
+         * 1. get 'next' and put it to 'front' history
+         * 2. put 'current' to be 'next'
+         * 3. put 'prev' to be 'current'
+         * 4. pop from 'back' history and put it as 'prev'
+         * @returns {Promise}
+         */
         function _previousState() {
-            var toBeNext = Storage.get(keysHash.current);
-
             var next = Storage.get(keysHash.next);
             Storage.push(keysHash.front, next);
 
+            var toBeNext = Storage.get(keysHash.current);
             Storage.set(keysHash.next, toBeNext);
 
             var toBeCurrent = Storage.get(keysHash.prev);
