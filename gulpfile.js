@@ -1,22 +1,43 @@
 // dependencies
 
 var gulp = require('gulp');
+
 var gutil = require('gulp-util');
-var bower = require('bower');
 var concat = require('gulp-concat');
 var sass = require('gulp-sass');
 var minifyCss = require('gulp-minify-css');
 var rename = require('gulp-rename');
+
+var path = require('path');
+var bower = require('bower');
 var sh = require('shelljs');
 var cordova = require('cordova-lib').cordova.raw;
 
 var paths = {
-    sass: ['./scss/**/*.scss']
+    sass: ['./scss/**/*.scss'],
+    www: path.join(__dirname, 'www')
 };
+
+var server = require('gulp-server-livereload');
 
 // gulp tasks
 
-gulp.task('default', ['sass']);
+gulp.task('default', ['watch', 'dev']);
+
+gulp.task('dev', function () {
+    var config = {
+        livereload: true,
+        directoryListing: false,
+        open: false,
+        host: '127.0.0.1',
+        port: 3111
+    };
+    gulp.src(paths.www).pipe(server(config));
+});
+
+gulp.task('watch', function () {
+    gulp.watch(paths.sass, ['sass']);
+});
 
 gulp.task('sass', function (done) {
     gulp.src('./scss/ionic.app.scss')
@@ -28,10 +49,6 @@ gulp.task('sass', function (done) {
         .pipe(rename({extname: '.min.css'}))
         .pipe(gulp.dest('./www/css/'))
         .on('end', done);
-});
-
-gulp.task('watch', function () {
-    gulp.watch(paths.sass, ['sass']);
 });
 
 gulp.task('install', ['git-check', 'plugins'], function () {
