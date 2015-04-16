@@ -62,11 +62,9 @@
 
             var state = {current: toBeCurrent, prev: toBePrev};
             var toBeNext = Storage.pop(keysHash.front);
-            if (toBeNext) return $q.when(angular.extend(state, {next: toBeNext}));
 
-            return _generateNext().then(function (toBeNext) {
-                return $q.when(angular.extend(state, {next: toBeNext}));
-            });
+            var nextPromise = !!toBeNext ? $q.when(toBeNext) : Word.random().$promise;
+            return nextPromise.then(_nextStateCallback(state));
         }
 
         function _previousState() {
@@ -86,11 +84,11 @@
             return $q.when({current: toBeCurrent, prev: toBePrev, next: toBeNext});
         }
 
-        function _generateNext() {
-            return Word.random().$promise.then(function (word) {
-                Storage.set(keysHash.next, word);
-                return word;
-            });
+        function _nextStateCallback(state) {
+            return function _next(toBeNext) {
+                Storage.set(keysHash.next, toBeNext);
+                return $q.when(angular.extend(state, {next: toBeNext}));
+            }
         }
     }
 })();
