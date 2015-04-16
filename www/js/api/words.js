@@ -6,8 +6,12 @@
 
     function Resource($resource, Environment) {
         var base = Environment.serverUrl();
-        return $resource(base + "/api/words/:action", {}, {
+        var resource = $resource(base + "/api/words/:action", {}, {
             random: {method: 'GET', params: {action: 'random'}}
         });
+
+        return {
+            random: resource.random().$promise
+        }
     }
 }());
