@@ -16,9 +16,7 @@
 
         // public functions
 
-        return {
-            setWordsCount: _setWordsCount
-        };
+        this.setWordsCount = _setWordsCount;
 
         // private functions
 
