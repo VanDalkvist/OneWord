@@ -11,7 +11,8 @@
             current: 'words:current',
             prev: 'words:prev',
             next: 'words:next',
-            back: 'words:back'
+            back: 'words:back',
+            front: 'words:front'
         };
 
         return {
@@ -59,14 +60,21 @@
             var toBeCurrent = Storage.get(keysHash.next);
             Storage.set(keysHash.current, toBeCurrent);
 
+            var state = {current: toBeCurrent, prev: toBePrev};
+            var toBeNext = Storage.pop(keysHash.front);
+            if (toBeNext) return $q.when(angular.extend(state, {next: toBeNext}));
+
             return _generateNext().then(function (toBeNext) {
-                return $q.when({current: toBeCurrent, prev: toBePrev, next: toBeNext});
+                return $q.when(angular.extend(state, {next: toBeNext}));
             });
         }
 
         function _previousState() {
             var toBeNext = Storage.get(keysHash.current);
-            // todo: already loaded
+
+            var next = Storage.get(keysHash.next);
+            Storage.push(keysHash.front, next);
+
             Storage.set(keysHash.next, toBeNext);
 
             var toBeCurrent = Storage.get(keysHash.prev);
