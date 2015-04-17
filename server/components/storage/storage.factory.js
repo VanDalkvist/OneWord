@@ -13,22 +13,22 @@ module.exports.create = _build;
 
 var builders = {
     mock: function (args) {
-        return new WordsMock(args);
+        return _create(WordsMock, args);
     },
     test: function (args) {
-        return new WordsMock(args);
+        return _create(WordsMock, args);
     },
     dev: function (args) {
-        return new Words(args);
+        return _create(Words, args);
     },
     prod: function (args) {
-        return new Words(args);
+        return _create(Words, args);
     },
     alfa: function (args) {
-        return new Words(args);
+        return _create(Words, args);
     },
     beta: function (args) {
-        return new Words(args);
+        return _create(Words, args);
     }
 };
 
@@ -38,4 +38,12 @@ function _build(env) {
     var args = Array.prototype.slice.call(arguments, 1);
 
     return builders[env](args);
+}
+
+function _create(constructor, args) {
+    // http://www.ecma-international.org/ecma-262/5.1/#sec-13.2.2
+    var instance = Object.create(constructor.prototype);
+    var result = constructor.apply(instance, args);
+
+    return (result !== null && typeof result === 'object') ? result : instance;
 }

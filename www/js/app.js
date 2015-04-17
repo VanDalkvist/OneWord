@@ -26,7 +26,9 @@
         }
 
         function _configureHttp() {
-            $http.defaults.headers.common.Authorization = AuthService.authorize();
+            AuthService.authorize().then(function (key) {
+                $http.defaults.headers.common['User-Key'] = key;
+            });
         }
 
         function _configureLogging() {

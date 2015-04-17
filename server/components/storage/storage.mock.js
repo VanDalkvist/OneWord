@@ -21,6 +21,7 @@ function Storage() {
 
     this.next = _next;
     this.getUser = _getUser;
+    this.saveUser = _saveUser;
 
     function _next(userId) {
         var number;

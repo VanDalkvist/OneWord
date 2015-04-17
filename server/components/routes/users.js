@@ -14,8 +14,20 @@ function _bootstrap(instance) {
     var app = instance.get('app');
     var storage = instance.get('storage');
 
+    router.post('register', function _register(req, res, next) {
+        var key = req.body.uid;
+
+        storage.saveUser(key).then(function (res) {
+            res.status(200).send();
+        }, function (err) {
+            // todo: log error
+            res.status(500).send(err);
+        });
+    });
+
     app.use('*', function _isAuthenticated(req, res, next) {
-        req.userId = _.random(1, 4); // todo: provide real userId
+        var authHeader = 'User-Key';
+        req.userId = req.get(authHeader);
         req.user = _getUser.call(storage, req.userId);
         next();
     });
