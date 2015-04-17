@@ -12,7 +12,7 @@
 
         return {
             register: function (uid) {
-                return resource.register({}, {uid: uid}).$promise;
+                return resource.register({uid: uid}).$promise;
             }
         }
     }

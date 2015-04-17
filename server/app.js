@@ -33,7 +33,7 @@ module.exports.bootstrap = _bootstrap;
 // private functions
 
 function _run() {
-    job.start('./server/components/scheduler/schedule');
+    //job.start('./server/components/scheduler/schedule');
 
     return _build()
         .then(function (di) {
@@ -41,6 +41,7 @@ function _run() {
             return _provideInstance(di);
         })
         .then(function (instance) {
+            _configureCors(instance);
             _configureStatic(instance);
             _configureAPI(instance);
             return instance;
@@ -97,6 +98,18 @@ function _connect(di) {
     });
 }
 
+function _configureCors(instance) {
+    var app = instance.get('app');
+    // https://www.npmjs.com/package/cors
+    // CORS (Cross-Origin Resource Sharing) headers to support Cross-site HTTP requests
+    app.all('*', function (req, res, next) {
+        // todo: specify origin // http://www.html5rocks.com/en/tutorials/cors/
+        res.header("Access-Control-Allow-Origin", "*");
+        res.header("Access-Control-Allow-Headers", "X-Requested-With");
+        next();
+    });
+}
+
 /**
  * Order of middleware is important
  */
@@ -110,12 +123,6 @@ function _configureAPI(instance) {
 
 function _configureStatic(instance) {
     var app = instance.get('app');
-    // CORS (Cross-Origin Resource Sharing) headers to support Cross-site HTTP requests
-    app.all('*', function (req, res, next) {
-        res.header("Access-Control-Allow-Origin", "*");
-        res.header("Access-Control-Allow-Headers", "X-Requested-With");
-        next();
-    });
 
     // view engine setup for ionic development purposes.
     app.use(express.static(path.join(__dirname, '../www')));
