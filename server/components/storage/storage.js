@@ -31,7 +31,7 @@ function Storage(db) {
     function _getWord(userId) {
         return _getNextWordNumber(userId).then(function (wordNumber) {
             // todo: rewrite to NotFound error
-            if (_.isEmpty(wordNumber)) return null;
+            if (!_.isNumber(wordNumber) && _.isEmpty(wordNumber)) return null;
 
             return _findWord(wordNumber);
         });
@@ -70,6 +70,12 @@ function Storage(db) {
         });
     }
 
+    /**
+     * todo: add reset option
+     * @param userId
+     * @returns {*|promise}
+     * @private
+     */
     function _findUserAndUpdateNumber(userId) {
         var deferred = Q.defer();
 
