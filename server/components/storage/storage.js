@@ -33,13 +33,14 @@ function Storage(db) {
 
             wordsCollection.findOne({number: wordNumber}, function (err, res) {
                 if (err) return deferred.reject(err);
+                delete res._id;
                 deferred.resolve(res);
             });
 
             return deferred.promise;
         }).then(function (word) {
             var next = ++number;
-            usersCollection.updateOne({id: userId}, {$set: {'word.number': (next < max ? next : null)}});
+            usersCollection.updateOne({id: userId}, {$set: {'word.number': (next < max ? next : null)}}, function(){});
             delete word.number;
             return word;
         });
@@ -70,8 +71,7 @@ function Storage(db) {
 
     function _getNextWordNumber(userId) {
         return _getUser(userId).then(function (user) {
-            return 0;
-            //return user.word.number || 0;
+            return user.word.number || 0;
         }, function (err) {
             errors("Error during getting the word. ", util.format(err), util.format(err.stack));
             throw new Error("Error during getting the word.");
