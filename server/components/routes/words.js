@@ -1,6 +1,8 @@
 // dependencies
 
 var express = require('express');
+var cors = require('cors');
+
 var router = express.Router();
 
 // app dependencies
@@ -16,6 +18,7 @@ module.exports.bootstrap = _bootstrap;
 function _bootstrap(instance) {
     var storage = instance.get('storage');
 
+    router.options('/random', cors());
     router.get('/random', _getWord.bind(storage));
 
     return router;
