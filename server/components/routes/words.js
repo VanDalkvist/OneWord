@@ -22,10 +22,11 @@ function _bootstrap(instance) {
 }
 
 function _getWord(req, res, next) {
-    // todo: set req.user
-    var storage = this;
+    var userId = req.userId;
+    if (!userId) return next(new Error('Unauthorized'));
 
-    storage.next(req.user.id).then(function (word) {
+    var storage = this;
+    storage.getWord(userId).then(function (word) {
         res.send(word);
     }, next);
 }
