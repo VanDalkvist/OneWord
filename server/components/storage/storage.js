@@ -19,16 +19,24 @@ function Storage(db) {
     var wordsCollection = db.collection('words');
     var usersCollection = db.collection('users');
 
-    this.next = _next;
+    this.getWord = _getWord;
     this.getUser = _getUser;
     this.saveUser = _saveUser;
 
-    function _next(userId) {
+    // todo: clean
+    function _getWord(userId) {
         var number;
 
         return _getNextWordNumber(userId).then(function (wordNumber) {
             number = wordNumber;
-            return Q.nfcall(wordsCollection.findOne.bind(wordsCollection), {number: wordNumber});
+            var deferred = Q.defer();
+
+            wordsCollection.findOne({number: wordNumber}, function (err, res) {
+                if (err) return deferred.reject(err);
+                deferred.resolve(res);
+            });
+
+            return deferred.promise;
         }).then(function (word) {
             var next = ++number;
             usersCollection.updateOne({id: userId}, {$set: {'word.number': (next < max ? next : null)}});
@@ -38,25 +46,32 @@ function Storage(db) {
     }
 
     function _getUser(userId) {
-        return Q.nfcall(usersCollection.findOne.bind(usersCollection), {userId: userId}).then(function (res) {
-            return res;
-        }, function (err) {
-            throw new Error("Cannot get user with id: '%s'", userId);
+        var deferred = Q.defer();
+
+        usersCollection.findOne({userId: userId}, function (err, res) {
+            if (err) return deferred.reject(new Error("Cannot get user with id: '%s'", userId));
+
+            deferred.resolve(res);
         });
+
+        return deferred.promise;
     }
 
     function _saveUser(userId) {
-        return Q.nfcall(usersCollection.insertOne.bind(usersCollection), {userId: userId, word: {number: 0}})
-            .then(function (res) {
-                return res;
-            }, function (err) {
-                throw new Error("Cannot save user with id: '%s'", userId);
-            });
+        var deferred = Q.defer();
+
+        usersCollection.insertOne({userId: userId, word: {number: 0}}, function (err, res) {
+            if (err) return deferred.reject(new Error("Cannot save user with id: '%s'", userId));
+            deferred.resolve({});
+        });
+
+        return deferred.promise;
     }
 
     function _getNextWordNumber(userId) {
         return _getUser(userId).then(function (user) {
-            return user.word.number || 0;
+            return 0;
+            //return user.word.number || 0;
         }, function (err) {
             errors("Error during getting the word. ", util.format(err), util.format(err.stack));
             throw new Error("Error during getting the word.");
