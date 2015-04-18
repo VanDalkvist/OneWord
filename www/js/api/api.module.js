@@ -5,8 +5,10 @@
         .module('one-word.api', ['ngResource', 'one-word.core'])
         .config(Config);
 
-    Config.$inject = [];
+    Config.$inject = ['EnvironmentProvider'];
 
-    function Config() {
+    function Config(EnvironmentProvider) {
+        // todo: configure server url by gulp task
+        EnvironmentProvider.setServerUrl('http://localhost:3000');
     }
 })();
