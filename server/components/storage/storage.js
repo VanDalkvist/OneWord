@@ -11,6 +11,7 @@ module.exports = Storage;
 
 // initialization
 
+// todo: configure max
 var max = 10;
 
 // private methods
@@ -21,28 +22,24 @@ function Storage(db) {
 
     this.getWord = _getWord;
     this.getUser = _getUser;
-    this.saveUser = _saveUser;
+    this.saveUser = _createUser;
 
     // todo: clean
     function _getWord(userId) {
-        var number;
-
         return _getNextWordNumber(userId).then(function (wordNumber) {
-            number = wordNumber;
+            if (wordNumber == null) return null;
+
             var deferred = Q.defer();
 
             wordsCollection.findOne({number: wordNumber}, function (err, res) {
                 if (err) return deferred.reject(err);
+
                 delete res._id;
+                delete res.number;
                 deferred.resolve(res);
             });
 
             return deferred.promise;
-        }).then(function (word) {
-            var next = ++number;
-            usersCollection.updateOne({id: userId}, {$set: {'word.number': (next < max ? next : null)}}, function(){});
-            delete word.number;
-            return word;
         });
     }
 
@@ -58,10 +55,11 @@ function Storage(db) {
         return deferred.promise;
     }
 
-    function _saveUser(userId) {
+    function _createUser(userId) {
         var deferred = Q.defer();
 
-        usersCollection.insertOne({userId: userId, word: {number: 0}}, function (err, res) {
+        var userModel = {userId: userId, word: {number: 0}};
+        usersCollection.insertOne(userModel, function (err, res) {
             if (err) return deferred.reject(new Error("Cannot save user with id: '%s'", userId));
             deferred.resolve({});
         });
@@ -70,8 +68,18 @@ function Storage(db) {
     }
 
     function _getNextWordNumber(userId) {
-        return _getUser(userId).then(function (user) {
-            return user.word.number || 0;
+        var deferred = Q.defer();
+
+        var find = {userId: userId, 'word.number': {'$lt': max}};
+        var update = {$inc: {'word.number': 1}};
+        usersCollection.findOneAndUpdate(find, update, function (err, res) {
+            if (err) return deferred.reject(new Error("Cannot get user with id: '%s'", userId));
+
+            deferred.resolve(res.value);
+        });
+
+        return deferred.promise.then(function (user) {
+            return !!user ? user.word.number : null;
         }, function (err) {
             errors("Error during getting the word. ", util.format(err), util.format(err.stack));
             throw new Error("Error during getting the word.");
