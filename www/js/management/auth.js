@@ -25,9 +25,8 @@
             if (key) return $q.when({status: 'NOTREQ', message: 'Not required.', result: {key: key}});
 
             key = uuid.v4();
-            Storage.set(keysHash.key, key);
-            
-            return Auth.register().then(function (key) {
+            return Auth.register(key).then(function () {
+                Storage.set(keysHash.key, key);
                 return $q.when({status: 'SUCCESS', message: 'Authorization successful.', result: {key: key}});
             }, function (err) {
                 return $q.when({status: 'ERR', message: 'Error occurs.'});
