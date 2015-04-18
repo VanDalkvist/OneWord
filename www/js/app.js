@@ -3,9 +3,9 @@
 
     angular.module('one-word').run(Run);
 
-    Run.$inject = ['$rootScope', '$http', '$log', '$ionicPlatform', 'AuthService'];
+    Run.$inject = ['$rootScope', '$http', '$state', '$timeout', '$log', '$ionicPlatform', 'AuthService', 'State'];
 
-    function Run($rootScope, $http, $log, $ionicPlatform, AuthService) {
+    function Run($rootScope, $http, $state, $timeout, $log, $ionicPlatform, AuthService, State) {
         $ionicPlatform.ready(_onCordovaReady);
 
         _configureLogging();
@@ -26,13 +26,25 @@
         }
 
         function _configureHttp() {
-            AuthService.authorize().then(function (key) {
-                $http.defaults.headers.common['User-Key'] = key;
+            AuthService.authorize().then(function (result) {
+                $http.defaults.headers.common['User-Key'] = result.key;
+                _navigateToWord();
+            }, function (err) {
+                // todo: show something like error dialog
             });
         }
 
         function _configureLogging() {
             $rootScope.$on("$stateChangeError", $log.log.bind($log));
+        }
+
+        function _navigateToWord() {
+            $log.log('navigate to word...');
+            State.current().then(function (state) {
+                $timeout(function () {
+                    $state.go('word', {name: state.current.name});
+                });
+            });
         }
     }
 })();

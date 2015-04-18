@@ -22,14 +22,14 @@
 
         function _authorize() {
             var key = Storage.get(keysHash.key);
-            if (key) return $q.when({status: 'NOTREQ', message: 'Not required.', result: {key: key}});
+            if (key) return $q.when({key: key});
 
             key = uuid.v4();
             return Auth.register(key).then(function () {
                 Storage.set(keysHash.key, key);
-                return $q.when({status: 'SUCCESS', message: 'Authorization successful.', result: {key: key}});
+                return $q.when({key: key});
             }, function (err) {
-                return $q.when({status: 'ERR', message: 'Error occurs.'});
+                throw new Error("Cannot register.");
             });
         }
     }

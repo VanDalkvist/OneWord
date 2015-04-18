@@ -24,14 +24,8 @@
 
         $stateProvider
             .state('main', {
-                url: "/main",
-                resolve: {
-                    state: ['$state', '$stateParams', 'State', function ($state, $stateParams, State) {
-                        return State.current().then(function (state) {
-                            return $state.go('word', {name: state.current.name});
-                        });
-                    }]
-                }
+                url: "^",
+                abstract: true
             })
             .state('word', {
                 url: "/word/:name",
