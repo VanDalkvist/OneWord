@@ -2,6 +2,10 @@
 
 var Q = require('q');
 var util = require('util');
+var _ = require('lodash');
+
+// app dependencies
+
 var logger = require('debug')('app:storage');
 var errors = require('debug')('app:storage:error');
 
@@ -24,22 +28,12 @@ function Storage(db) {
     this.getUser = _getUser;
     this.saveUser = _createUser;
 
-    // todo: clean
     function _getWord(userId) {
         return _getNextWordNumber(userId).then(function (wordNumber) {
-            if (wordNumber == null) return null;
+            // todo: rewrite to NotFound error
+            if (_.isEmpty(wordNumber)) return null;
 
-            var deferred = Q.defer();
-
-            wordsCollection.findOne({number: wordNumber}, function (err, res) {
-                if (err) return deferred.reject(err);
-
-                delete res._id;
-                delete res.number;
-                deferred.resolve(res);
-            });
-
-            return deferred.promise;
+            return _findWord(wordNumber);
         });
     }
 
@@ -68,6 +62,15 @@ function Storage(db) {
     }
 
     function _getNextWordNumber(userId) {
+        return _findUserAndUpdateNumber(userId).then(function (user) {
+            return !!user ? user.word.number : null;
+        }, function (err) {
+            errors("Error during getting the word. ", util.format(err), util.format(err.stack));
+            throw new Error("Error during getting the word.");
+        });
+    }
+
+    function _findUserAndUpdateNumber(userId) {
         var deferred = Q.defer();
 
         var find = {userId: userId, 'word.number': {'$lt': max}};
@@ -78,11 +81,24 @@ function Storage(db) {
             deferred.resolve(res.value);
         });
 
-        return deferred.promise.then(function (user) {
-            return !!user ? user.word.number : null;
-        }, function (err) {
-            errors("Error during getting the word. ", util.format(err), util.format(err.stack));
-            throw new Error("Error during getting the word.");
+        return deferred.promise;
+    }
+
+    function _findWord(number) {
+        var deferred = Q.defer();
+
+        wordsCollection.findOne({number: number}, function (err, res) {
+            if (err) return deferred.reject(err);
+
+            deferred.resolve(_prepareWord(res));
         });
+
+        return deferred.promise;
+    }
+
+    function _prepareWord(word) {
+        delete word._id;
+        delete word.number;
+        return word;
     }
 }
