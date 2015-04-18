@@ -80,7 +80,7 @@
          */
         function _previousState() {
             var next = Storage.get(keysHash.next);
-            Storage.push(keysHash.front, next);
+            !!next && Storage.push(keysHash.front, next);
 
             var toBeNext = Storage.get(keysHash.current);
             Storage.set(keysHash.next, toBeNext);
@@ -96,6 +96,9 @@
 
         function _nextStateCallback(state) {
             return function _next(toBeNext) {
+                if (!toBeNext.name) toBeNext = null;
+                // todo: count not found state
+
                 Storage.set(keysHash.next, toBeNext);
                 return $q.when(ng.extend(state, {next: toBeNext}));
             }
