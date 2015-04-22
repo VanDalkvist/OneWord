@@ -2,7 +2,7 @@
 
     'use strict';
 
-    angular.module('one-word.management').service('AuthService', Service);
+    angular.module('one-word.core').service('AuthService', Service);
 
     Service.$inject = ['$q', 'uuid', 'Storage', 'Auth'];
 

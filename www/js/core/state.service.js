@@ -2,7 +2,7 @@
 
     'use strict';
 
-    angular.module('one-word.management').service('State', Service);
+    angular.module('one-word.core').service('State', Service);
 
     Service.$inject = ['$q', 'ng', 'Word', 'Storage', 'Counts'];
 

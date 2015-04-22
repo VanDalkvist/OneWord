@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('one-word.words', ['ui.router', 'one-word.management']).config(Config);
+    angular.module('one-word.words', ['ui.router', 'one-word.core']).config(Config);
 
     Config.$inject = ['$stateProvider'];
 

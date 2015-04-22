@@ -4,7 +4,7 @@
 
     var app = angular.module('one-word', [
         'ionic', 'ui.router',
-        'one-word.settings', 'one-word.words', 'one-word.management'
+        'one-word.settings', 'one-word.words', 'one-word.core'
     ]);
 
     app.config(Config);

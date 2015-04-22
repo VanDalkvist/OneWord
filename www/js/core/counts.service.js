@@ -2,7 +2,7 @@
 
     'use strict';
 
-    angular.module('one-word.management').service('Counts', Service);
+    angular.module('one-word.core').service('Counts', Service);
 
     Service.$inject = ['Storage'];
 
