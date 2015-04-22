@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('one-word.storage', ['LocalStorageModule']).config(Config);
+    angular.module('one-word.core.storage', ['LocalStorageModule']).config(Config);
 
     Config.$inject = ['localStorageServiceProvider'];
 

@@ -2,7 +2,7 @@
 
     'use strict';
 
-    angular.module('one-word.storage').service('LocalStorage', LocalStorageFactory);
+    angular.module('one-word.core.storage').service('LocalStorage', LocalStorageFactory);
 
     LocalStorageFactory.$inject = ['localStorageService'];
 
