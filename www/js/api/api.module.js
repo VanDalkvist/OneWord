@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('one-word.api', ['ngResource', 'one-word.core'])
+        .module('one-word.api', ['ngResource', 'one-word.common'])
         .config(Config);
 
     Config.$inject = ['EnvironmentProvider'];

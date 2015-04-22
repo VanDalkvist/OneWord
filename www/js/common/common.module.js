@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('one-word.core', []).config(Config);
+    angular.module('one-word.common', []).config(Config);
 
     Config.$inject = ['EnvironmentProvider'];
 

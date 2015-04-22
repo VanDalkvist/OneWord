@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('one-word.management', ['one-word.core', 'one-word.storage', 'one-word.api'])
+        .module('one-word.management', ['one-word.common', 'one-word.storage', 'one-word.api'])
         .config(Config);
 
     Config.$inject = [];

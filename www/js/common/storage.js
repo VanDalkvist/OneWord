@@ -2,7 +2,7 @@
 
     'use strict';
 
-    angular.module('one-word.core').factory('Storage', Service);
+    angular.module('one-word.common').factory('Storage', Service);
 
     Service.$inject = ['$injector', 'Environment'];
 
