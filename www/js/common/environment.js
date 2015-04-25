@@ -4,9 +4,9 @@
 
     angular.module('one-word.common').provider('Environment', Provider);
 
-    Provider.$inject = ['_'];
+    Provider.$inject = [];
 
-    function Provider(_) {
+    function Provider() {
         // initialization
 
         var mainModuleName = 'one-word';
@@ -18,6 +18,7 @@
         this.injectService = _injectService;
 
         this.$get = Service;
+        this.$get.$inject = ['_'];
 
         // private functions
 
@@ -32,7 +33,7 @@
             };
         }
 
-        function Service() {
+        function Service(_) {
             var service = {
                 serverUrl: function () {
                     return settings.serverUrl || '';
