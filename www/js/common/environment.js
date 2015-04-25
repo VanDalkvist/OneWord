@@ -44,7 +44,7 @@
                     return _.cloneDeep(value);
                 }
             });
-            return service;
+            return Object.freeze(service);
         }
     }
 })();
