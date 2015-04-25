@@ -13,4 +13,9 @@
         return _;
     })());
 
+    //// todo: set
+    //angular.module('one-word.common').constant('localNotificationsPlugin', (function LocalNotifications() {
+    //    return cordova.plugins.notification.local;
+    //})());
+
 })();

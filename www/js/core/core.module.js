@@ -5,9 +5,8 @@
         .module('one-word.core', ['one-word.common', 'one-word.core.storage', 'one-word.api'])
         .config(Config);
 
-    Config.$inject = ['NotificationsProvider'];
+    Config.$inject = [];
 
-    function Config(NotificationsProvider) {
-        NotificationsProvider.setNotificationsType('local');
+    function Config() {
     }
 })();

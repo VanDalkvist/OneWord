@@ -12,12 +12,20 @@
 
         // public functions
 
-        this.method = _method;
+        this.addSchedule = _addSchedule;
 
         // private functions
 
-        function _method() {
-
+        function _addSchedule() {
+            try {
+                cordova.plugins.notification.local.schedule({
+                    id: 1,
+                    text: 'Test notification',
+                    every: 'minute'
+                });
+            } catch (e) {
+                // todo: log
+            }
         }
     }
 })();

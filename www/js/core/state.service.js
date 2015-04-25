@@ -4,9 +4,9 @@
 
     angular.module('one-word.core').service('State', Service);
 
-    Service.$inject = ['$q', 'ng', 'Word', 'Storage', 'Counts'];
+    Service.$inject = ['$q', 'ng', 'Word', 'Storage', 'Notifications'];
 
-    function Service($q, ng, Word, Storage, Counts) {
+    function Service($q, ng, Word, Storage, Notifications) {
         var keysHash = {
             current: 'words:current',
             prev: 'words:prev',
@@ -31,6 +31,8 @@
             var current = Storage.get(keysHash.current);
             var prev = Storage.get(keysHash.prev);
             var next = Storage.get(keysHash.next);
+
+            Notifications.addSchedule();
 
             if (!!current) return $q.when({current: current, prev: prev, next: next});
 
