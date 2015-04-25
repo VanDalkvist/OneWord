@@ -7,11 +7,11 @@
     Factory.$inject = ['$injector', 'Environment'];
 
     function Factory($injector, Environment) {
-        var storage = Environment.storage();
-        if (!storage || !storage.type)
-            throw new Error("No storage was configured.");
+        var storageSettings = Environment.storage();
+        if (!storageSettings || !storageSettings.type)
+            throw new Error("No 'storage' services were configured.");
 
         // todo: inject from other module
-        return $injector.get(storage.type);
+        return $injector.get(storageSettings.type);
     }
 })();

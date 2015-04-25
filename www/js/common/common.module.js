@@ -6,6 +6,7 @@
     Config.$inject = ['EnvironmentProvider'];
 
     function Config(EnvironmentProvider) {
-        EnvironmentProvider.setStorage('LocalStorage');
+        EnvironmentProvider.injectService('storage', 'LocalStorage');
+        EnvironmentProvider.injectService('notifications', 'LocalNotifications');
     }
 })();

@@ -9,4 +9,8 @@
         return angular;
     })());
 
+    angular.module('one-word.common').constant('_', (function Lodash() {
+        return _;
+    })());
+
 })();

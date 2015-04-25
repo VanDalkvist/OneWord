@@ -4,18 +4,18 @@
 
     angular.module('one-word.common').provider('Environment', Provider);
 
-    Provider.$inject = [];
+    Provider.$inject = ['_'];
 
-    function Provider() {
+    function Provider(_) {
         // initialization
 
         var mainModuleName = 'one-word';
-        var settings = {};
+        var settings = {services: {}};
 
         // public functions
 
         this.setServerUrl = _setServerUrl;
-        this.setStorage = _setStorage;
+        this.injectService = _injectService;
 
         this.$get = Service;
 
@@ -25,23 +25,25 @@
             settings.serverUrl = url;
         }
 
-        function _setStorage(storage, module) {
-            settings.storageType = storage;
-            settings.moduleName = module || mainModuleName;
+        function _injectService(serviceType, serviceToInject, moduleName) {
+            settings.services[serviceType] = {
+                type: serviceToInject,
+                module: moduleName || mainModuleName
+            };
         }
 
         function Service() {
-            return {
+            var service = {
                 serverUrl: function () {
                     return settings.serverUrl || '';
-                },
-                storage: function () {
-                    return {
-                        type: settings.storageType,
-                        module: settings.moduleName
-                    };
                 }
-            }
+            };
+            _.each(settings.services, function (value, key) {
+                service[key] = function () {
+                    return _.cloneDeep(value);
+                }
+            });
+            return service;
         }
     }
 })();

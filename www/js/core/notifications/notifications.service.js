@@ -2,7 +2,7 @@
 
     'use strict';
 
-    angular.module('one-word.core').service('Notifications', Service);
+    angular.module('one-word.core').service('LocalNotifications', Service);
 
     Service.$inject = ['Storage'];
 
