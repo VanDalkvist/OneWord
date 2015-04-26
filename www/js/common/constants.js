@@ -2,20 +2,15 @@
     'use strict';
 
     angular.module('one-word.common').constant('uuid', (function Uuid() {
-        return uuid;
+        return Object.freeze(uuid);
     })());
 
     angular.module('one-word.common').constant('ng', (function NG() {
-        return angular;
+        return Object.freeze(angular);
     })());
 
     angular.module('one-word.common').constant('_', (function Lodash() {
-        return _;
+        return Object.freeze(_);
     })());
-
-    //// todo: set
-    //angular.module('one-word.common').constant('localNotificationsPlugin', (function LocalNotifications() {
-    //    return cordova.plugins.notification.local;
-    //})());
 
 })();
