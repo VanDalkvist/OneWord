@@ -13,4 +13,8 @@
         return Object.freeze(_);
     })());
 
+    angular.module('one-word.common').constant('moment', (function Lodash() {
+        return Object.freeze(moment);
+    })());
+
 })();

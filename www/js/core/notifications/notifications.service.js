@@ -4,15 +4,21 @@
 
     angular.module('one-word.core').service('LocalNotifications', Service);
 
-    Service.$inject = ['Storage'];
+    Service.$inject = ['$window', '_', 'moment', 'Storage'];
 
-    function Service(Storage) {
+    function Service($window, _, moment, Storage) {
 
         // initialization
 
+        var settings = {
+            keys: {
+                scheduled: 'scheduled:'
+            }
+        };
+
         // public functions
 
-        this.sked = _addToSchedule;
+        this.sked = _addSchedule;
         this.cancel = _removeFromSchedule;
         this.isAssigned = _scheduleExists;
 
@@ -23,12 +29,26 @@
          * 2. Save notifications ids to storage
          * @param word
          */
-        function _addToSchedule(word) {
-            //plugins && plugins.notification.local.schedule({
-            //    id: 1,
-            //    text: 'Test notification',
-            //    every: 'minute'
-            //});
+        function _addSchedule(word) {
+            if (!$window.cordova) return;
+
+            // todo: link id to uniqueName
+            var uniqueName = settings.keys.scheduled + word.name;
+
+            var notificationTemplate = {
+                id: 1,
+                title: word.name,
+                text: word.definition
+            };
+
+            var notifications = [
+                _.extend({}, notificationTemplate, {at: moment().add(2, 'd').toDate()}),
+                _.extend({}, notificationTemplate, {at: moment().add(3, 'd').toDate()}),
+                _.extend({}, notificationTemplate, {at: moment().add(5, 'd').toDate()}),
+                _.extend({}, notificationTemplate, {at: moment().add(8, 'd').toDate()}),
+                _.extend({}, notificationTemplate, {at: moment().add(13, 'd').toDate()})
+            ];
+            $window.cordova.plugins.notification.local.schedule(notifications);
         }
 
         /**
@@ -38,7 +58,12 @@
          * @param word
          */
         function _removeFromSchedule(word) {
+            if (!$window.cordova) return;
 
+            // todo: check ids
+            var ids = [1, 2];
+            $window.cordova.plugins.notification.local.cancel(ids, function() {
+            });
         }
 
         /**
