@@ -4,16 +4,15 @@
 
     angular.module('one-word.common').factory('Notifications', Factory);
 
-    Factory.$inject = ['$injector', 'Environment'];
+    Factory.$inject = ['$window', '$injector', 'Environment'];
 
-    function Factory($injector, Environment) {
+    function Factory($window, $injector, Environment) {
         var notificationsSettings = Environment.notifications();
-        if (!notificationsSettings || !notificationsSettings.type)
-            throw new Error("No 'notifications' services were configured.");
+        var injectIsAllowed = (notificationsSettings && $window.cordova);
 
-        // todo: http://phonegap-tips.com/articles/conditional-dependency-injection-with-angularjs.html
+        var type = injectIsAllowed ? notificationsSettings.type : 'NotificationsMock';
 
         // todo: inject from other module
-        return $injector.get(notificationsSettings.type);
+        return $injector.get(type);
     }
 })();

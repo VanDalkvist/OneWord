@@ -30,9 +30,6 @@
         // private functions
 
         function _init() {
-            // todo: get rid of the next line
-            if (!$window.cordova) return;
-
             $window.cordova.plugins.notification.local.on('schedule', function (notification) {
                 $log.debug("scheduled: " + notification.id + " notification for word: " + notification.title);
 
@@ -46,9 +43,6 @@
          * @param word
          */
         function _addSchedule(word) {
-            // todo: get rid of the next line
-            if (!$window.cordova) return;
-
             var notifications = [
                 // todo: remove testing notifications
                 //_.extend({}, notificationTemplate, {at: moment().add(1, 'm').toDate(), id: Counter.increment()}),
@@ -84,9 +78,6 @@
          * @param word
          */
         function _removeFromSchedule(word) {
-            // todo: get rid of the next line
-            if (!$window.cordova) return;
-
             var ids = Storage.get(keysHash.word(word.name));
             $window.cordova.plugins.notification.local.cancel(ids, function () {
                 $log.debug("canceled: " + ids.join(', '));
