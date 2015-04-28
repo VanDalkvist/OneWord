@@ -4,17 +4,24 @@
 
     angular.module('one-word.core').service('LocalNotifications', Service);
 
-    Service.$inject = ['$window', '_', 'moment', 'Storage'];
+    Service.$inject = ['$window', '$log', '$ionicPlatform', '_', 'moment', 'Storage', 'Counter'];
 
-    function Service($window, _, moment, Storage) {
+    function Service($window, $log, $ionicPlatform, _, moment, Storage, Counter) {
 
         // initialization
 
-        var settings = {
-            keys: {
-                scheduled: 'scheduled:'
+        // todo: move to constants
+        var colon = ':';
+        var keysHash = {
+            scheduled: 'scheduled',
+            word: function (wordName) {
+                return this.scheduled + colon + wordName;
             }
         };
+
+        $ionicPlatform.ready(function () {
+            _init();
+        });
 
         // public functions
 
@@ -24,31 +31,52 @@
 
         // private functions
 
+        function _init() {
+            // todo: get rid of the next line
+            if (!$window.cordova) return;
+
+            $window.cordova.plugins.notification.local.on('schedule', function (notification) {
+                $log.debug("scheduled: " + notification.id + " notification for word: " + notification.title);
+
+                Storage.push(keysHash.word(notification.title), notification.id);
+            });
+        }
+
         /**
          * 1. Add schedule for word (2, 3, 5, 8, 13)
          * 2. Save notifications ids to storage
          * @param word
          */
         function _addSchedule(word) {
+            // todo: get rid of the next line
             if (!$window.cordova) return;
 
-            // todo: link id to uniqueName
-            var uniqueName = settings.keys.scheduled + word.name;
-
-            var notificationTemplate = {
-                id: 1,
-                title: word.name,
-                text: word.definition
-            };
-
             var notifications = [
-                _.extend({}, notificationTemplate, {at: moment().add(2, 'd').toDate()}),
-                _.extend({}, notificationTemplate, {at: moment().add(3, 'd').toDate()}),
-                _.extend({}, notificationTemplate, {at: moment().add(5, 'd').toDate()}),
-                _.extend({}, notificationTemplate, {at: moment().add(8, 'd').toDate()}),
-                _.extend({}, notificationTemplate, {at: moment().add(13, 'd').toDate()})
+                // todo: remove testing notifications
+                //_.extend({}, notificationTemplate, {at: moment().add(1, 'm').toDate(), id: Counter.increment()}),
+                //_.extend({}, notificationTemplate, {at: moment().add(2, 'm').toDate(), id: Counter.increment()}),
+                //_.extend({}, notificationTemplate, {at: moment().add(3, 'm').toDate(), id: Counter.increment()}),
+                //_.extend({}, notificationTemplate, {at: moment().add(4, 'm').toDate(), id: Counter.increment()}),
+
+                _buildNotification(word, 2),
+                _buildNotification(word, 3),
+                _buildNotification(word, 5),
+                _buildNotification(word, 8),
+                _buildNotification(word, 13)
             ];
-            $window.cordova.plugins.notification.local.schedule(notifications);
+
+            $ionicPlatform.ready(function () {
+                $window.cordova.plugins.notification.local.schedule(notifications);
+            });
+        }
+
+        function _buildNotification(word, day, id) {
+            return {
+                title: word.name,
+                text: word.definition,
+                id: id !== undefined ? id : Counter.increment(),
+                at: moment().add(day, 'd').toDate()
+            };
         }
 
         /**
@@ -58,11 +86,12 @@
          * @param word
          */
         function _removeFromSchedule(word) {
+            // todo: get rid of the next line
             if (!$window.cordova) return;
 
-            // todo: check ids
-            var ids = [1, 2];
-            $window.cordova.plugins.notification.local.cancel(ids, function() {
+            var ids = Storage.get(keysHash.word(word.name));
+            $window.cordova.plugins.notification.local.cancel(ids, function () {
+                $log.debug("canceled: " + ids.join(', '));
             });
         }
 
@@ -71,7 +100,9 @@
          * @param word
          */
         function _scheduleExists(word) {
+            var ids = Storage.get(keysHash.word(word.name));
 
+            return !!ids && ids.length > 0;
         }
     }
 })();

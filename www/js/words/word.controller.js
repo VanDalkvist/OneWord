@@ -15,8 +15,9 @@
 
         instance.vm = state;
 
-        if (!Notifications.isAssigned(state.current))
+        if (state.current && !Notifications.isAssigned(state.current)) {
             Notifications.sked(state.current);
+        }
 
         // public functions
 
