@@ -19,9 +19,7 @@
             }
         };
 
-        $ionicPlatform.ready(function () {
-            _init();
-        });
+        $ionicPlatform.ready(_init);
 
         // public functions
 
