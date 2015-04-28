@@ -42,7 +42,6 @@ function _run() {
         })
         .then(function (instance) {
             _configureCors(instance);
-            _configureStatic(instance);
             _configureAPI(instance);
             return instance;
         });
@@ -119,11 +118,4 @@ function _configureAPI(instance) {
     app.use('/api/words', words.bootstrap(instance));
 
     errors.bootstrap(instance);
-}
-
-function _configureStatic(instance) {
-    var app = instance.get('app');
-
-    // view engine setup for ionic development purposes.
-    app.use(express.static(path.join(__dirname, '../www')));
 }
