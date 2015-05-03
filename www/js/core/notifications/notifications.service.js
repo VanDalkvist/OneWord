@@ -42,7 +42,7 @@
          * 2. Save notifications ids to storage
          * @param word
          */
-        function _addSchedule(word) {
+        function _addSchedule(word, clickHandler) {
             var notifications = [
                 // todo: remove testing notifications
                 //_.extend({}, notificationTemplate, {at: moment().add(1, 'm').toDate(), id: Counter.increment()}),
@@ -60,6 +60,7 @@
             $ionicPlatform.ready(function () {
                 $window.cordova.plugins.notification.local.schedule(notifications);
             });
+            // todo: add 'click' event handler - 'clickHandler'
         }
 
         function _buildNotification(word, day, id) {

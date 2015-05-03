@@ -16,7 +16,7 @@
         instance.vm = state;
 
         if (state.current && !Notifications.isAssigned(state.current)) {
-            Notifications.sked(state.current);
+            Notifications.sked(state.current, _clickHandler);
         }
 
         // public functions
@@ -38,6 +38,11 @@
 
         function _known(word) {
             Notifications.cancel(word);
+        }
+
+        function _clickHandler() {
+            // todo: enhance redirect to current (setting current)
+            $state.transitionTo('word', {name: instance.vm.current.name});
         }
     }
 }());
