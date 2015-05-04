@@ -12,7 +12,11 @@
             prev: 'words:prev',
             next: 'words:next',
             back: 'words:back',
-            front: 'words:front'
+            front: 'words:front',
+            cache: function (name) {
+                return 'words:cache:' + name;
+            },
+            last: 'words:last'
         };
 
         // public functions
@@ -20,6 +24,7 @@
         this.current = _currentState;
         this.next = _nextState;
         this.previous = _previousState;
+        this.exact = _exact;
 
         /**
          * 1. get 'current', 'prev', 'next' from cache
@@ -36,6 +41,7 @@
 
             // todo: check current count for max value exceeded
             var currentPromise = Word.random().then(function _fillCache(word) {
+                Storage.setIfNotExist(keysHash.cache(word.name), word);
                 Storage.set(keysHash.current, word);
                 return word;
             });
@@ -94,11 +100,17 @@
             return $q.when({current: toBeCurrent, prev: toBePrev, next: toBeNext});
         }
 
+        function _exact(word) {
+            var toBeCurrent = Storage.get(keysHash.cache(word.name));
+
+        }
+
         function _nextStateCallback(state) {
             return function _next(toBeNext) {
                 if (!toBeNext.name) toBeNext = null;
                 // todo: count not found state
 
+                Storage.setIfNotExist(keysHash.cache(toBeNext.name), toBeNext);
                 Storage.set(keysHash.next, toBeNext);
                 return $q.when(ng.extend(state, {next: toBeNext}));
             }

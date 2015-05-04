@@ -17,6 +17,7 @@
         this.pull = _pull;
         this.pop = _pop;
         this.push = _push;
+        this.setIfNotExist = _setIfNotExist;
 
         // private functions
 
@@ -48,6 +49,13 @@
             var array = _get(key) || [];
             array.push(value);
             _set(key, array);
+        }
+
+        function _setIfNotExist(key, value) {
+            var item = _get(key);
+            if (!!item) return;
+
+            _set(key, value);
         }
     }
 })();

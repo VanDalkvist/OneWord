@@ -16,7 +16,7 @@
         instance.vm = state;
 
         if (state.current && !Notifications.isAssigned(state.current)) {
-            Notifications.sked(state.current, _clickHandler);
+            Notifications.sked(state.current, _redirectFromNotification);
         }
 
         // public functions
@@ -40,7 +40,7 @@
             Notifications.cancel(word);
         }
 
-        function _clickHandler() {
+        function _redirectFromNotification() {
             // todo: enhance redirect to current (setting current)
             $state.transitionTo('word', {name: instance.vm.current.name});
         }
