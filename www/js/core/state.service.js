@@ -9,12 +9,18 @@
     function Service($q, ng, Word, Storage) {
         var keysHash = {
             current: 'words:current',
-            prev: 'words:prev',
-            next: 'words:next',
-            back: 'words:back',
-            front: 'words:front',
-            cache: function (name) {
+            //prev: 'words:prev',
+            //next: 'words:next',
+            //back: 'words:back',
+            //front: 'words:front',
+            word: function (name) {
                 return 'words:cache:' + name;
+            },
+            prev: function (name) {
+                return 'words:ref:' + name + ':prev';
+            },
+            next: function (name) {
+                return 'words:ref:' + name + ':next';
             },
             last: 'words:last'
         };
@@ -33,22 +39,39 @@
          * @returns {Promise}
          */
         function _currentState() {
-            var current = Storage.get(keysHash.current);
-            var prev = Storage.get(keysHash.prev);
-            var next = Storage.get(keysHash.next);
+            //var current = Storage.get(keysHash.current);
+            var last = Storage.get(keysHash.last);
 
-            if (!!current) return $q.when({current: current, prev: prev, next: next});
+            if (!!last) {
+                var prevKey = Storage.get(keysHash.prev(last.name));
+                var nextKey = Storage.get(keysHash.next(last.name));
+                return $q.when({
+                    current: last,
+                    prev: !!prevKey ? Storage.get(prevKey) : null,
+                    next: !!nextKey ? Storage.get(nextKey) : null
+                });
+            }
 
-            // todo: check current count for max value exceeded
-            var currentPromise = Word.random().then(function _fillCache(word) {
-                Storage.setIfNotExist(keysHash.cache(word.name), word);
-                Storage.set(keysHash.current, word);
+            var wordPromise = Word.random().then(function _fillCache(word) {
+                Storage.set(keysHash.word(word.name), word);
+                //Storage.setIfNotExist(keysHash.prev(word.name), null);
+                Storage.set(keysHash.prev(word.name), null);
                 return word;
             });
 
-            return currentPromise.then(function (current) {
-                var state = {current: current, prev: undefined};
-                return Word.random().then(_nextStateCallback(state));
+            return wordPromise.then(function (current) {
+                var state = {current: current, prev: null};
+                return Word.random().then(function _next(toBeNext) {
+                    if (!toBeNext.name) toBeNext = null;
+                    // todo: count not found state
+
+                    var nextKey = null;
+                    if (toBeNext !== null)
+                        nextKey = keysHash.word(toBeNext.name);
+                    //Storage.set(nextKey, toBeNext);
+                    Storage.set(keysHash.next(current.name), nextKey);
+                    return $q.when(ng.extend(state, {next: toBeNext}));
+                });
             });
         }
 
@@ -101,7 +124,7 @@
         }
 
         function _exact(word) {
-            var toBeCurrent = Storage.get(keysHash.cache(word.name));
+            var toBeCurrent = Storage.get(keysHash.word(word.name));
 
         }
 
@@ -110,7 +133,7 @@
                 if (!toBeNext.name) toBeNext = null;
                 // todo: count not found state
 
-                Storage.setIfNotExist(keysHash.cache(toBeNext.name), toBeNext);
+                Storage.setIfNotExist(keysHash.word(toBeNext.name), toBeNext);
                 Storage.set(keysHash.next, toBeNext);
                 return $q.when(ng.extend(state, {next: toBeNext}));
             }
