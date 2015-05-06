@@ -40,9 +40,8 @@
             Notifications.cancel(word);
         }
 
-        function _redirectFromNotification() {
-            // todo: enhance redirect to current (setting current)
-            $state.transitionTo('word', {name: instance.vm.current.name});
+        function _redirectFromNotification(wordName) {
+            $state.transitionTo('word', {name: wordName, direction: 'exact'});
         }
     }
 }());

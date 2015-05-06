@@ -9,10 +9,6 @@
     function Service($q, ng, Word, Storage) {
         var keysHash = {
             current: 'words:current',
-            //prev: 'words:prev',
-            //next: 'words:next',
-            //back: 'words:back',
-            //front: 'words:front',
             word: function (name) {
                 return 'words:cache:' + name;
             },
@@ -39,65 +35,81 @@
          * @returns {Promise}
          */
         function _currentState() {
-            //var current = Storage.get(keysHash.current);
             var last = Storage.get(keysHash.last);
 
-            if (!!last) {
-                var prevKey = Storage.get(keysHash.prev(last.name));
-                var nextKey = Storage.get(keysHash.next(last.name));
-                return $q.when({
-                    current: last,
-                    prev: !!prevKey ? Storage.get(prevKey) : null,
-                    next: !!nextKey ? Storage.get(nextKey) : null
-                });
-            }
+            if (!!last) return _getLastState(last);
 
-            var wordPromise = Word.random().then(function _fillCache(word) {
-                Storage.set(keysHash.word(word.name), word);
-                //Storage.setIfNotExist(keysHash.prev(word.name), null);
-                Storage.set(keysHash.prev(word.name), null);
-                return word;
-            });
+            var wordPromise = Word.random().then(_saveCurrent);
 
-            return wordPromise.then(function (current) {
-                var state = {current: current, prev: null};
-                return Word.random().then(function _next(toBeNext) {
-                    if (!toBeNext.name) toBeNext = null;
-                    // todo: count not found state
+            return wordPromise.then(_buildElements);
+        }
 
-                    var nextKey = null;
-                    if (toBeNext !== null)
-                        nextKey = keysHash.word(toBeNext.name);
-                    //Storage.set(nextKey, toBeNext);
-                    Storage.set(keysHash.next(current.name), nextKey);
-                    return $q.when(ng.extend(state, {next: toBeNext}));
-                });
+        function _getLastState(lastWord) {
+            var prevKey = Storage.get(keysHash.prev(lastWord.name));
+            var nextKey = Storage.get(keysHash.next(lastWord.name));
+            return $q.when({
+                current: lastWord,
+                prev: !!prevKey ? Storage.get(prevKey) : null,
+                next: !!nextKey ? Storage.get(nextKey) : null
             });
         }
 
-        /**
-         * 1. get 'prev' from cache if exist and put it to 'back' history
-         * 2. put 'current' to be 'prev'
-         * 3. put 'next' to be 'current'
-         * 4. pop from 'front' history if exist and put it as 'next'
-         * 5. generate 'next' if not exists in 'front' history
-         * @returns {Promise}
-         */
+        function _saveCurrent(word) {
+            Storage.set(keysHash.word(word.name), word);
+            Storage.set(keysHash.prev(word.name), null);
+            Storage.set(keysHash.last, word);
+            return word;
+        }
+
+        function _buildElements(last) {
+            var toBeNextKey = Storage.get(keysHash.next(last.name));
+            var toBeNextPromise = toBeNextKey !== null ? $q.when(Storage.get(toBeNextKey)) : Word.random();
+
+            return _buildState(toBeNextPromise, last);
+        }
+
+        function _buildState(nextPromise, last) {
+            return nextPromise
+                .then(_saveNext(last))
+                .then(function (toBeNext) {
+                    return _getLastState(last);
+                });
+        }
+
+        function _saveNext(toBeCurrent) {
+            return function (toBeNext) {
+                if (!toBeNext.name) toBeNext = null;
+                // todo: count not found state
+
+                var nextKey = _buildNextKey(toBeNext);
+
+                Storage.set(keysHash.next(toBeCurrent.name), nextKey);
+                Storage.set(nextKey, toBeNext);
+                !!toBeNext && Storage.set(keysHash.prev(toBeNext.name), keysHash.word(toBeCurrent.name));
+
+                return toBeNext;
+            }
+        }
+
+        function _buildNextKey(toBeNext) {
+            if (toBeNext === null) return null;
+
+            return keysHash.word(toBeNext.name);
+        }
+
         function _nextState() {
-            var prev = Storage.get(keysHash.prev);
-            !!prev && Storage.push(keysHash.back, prev);
+            var last = Storage.get(keysHash.last);
 
-            var toBePrev = Storage.get(keysHash.current);
-            Storage.set(keysHash.prev, toBePrev);
+            var toBeCurrentKey = Storage.get(keysHash.next(last.name));
+            if (!toBeCurrentKey) {
+                // todo: empty state
+                return;
+            }
+            var toBeCurrent = Storage.get(toBeCurrentKey);
 
-            var toBeCurrent = Storage.get(keysHash.next);
-            Storage.set(keysHash.current, toBeCurrent);
+            Storage.set(keysHash.last, toBeCurrent);
 
-            var state = {current: toBeCurrent, prev: toBePrev};
-            var toBeNext = Storage.pop(keysHash.front);
-
-            var nextPromise = !!toBeNext ? $q.when(toBeNext) : Word.random();
-            return nextPromise.then(_nextStateCallback(state));
+            return _buildElements(toBeCurrent);
         }
 
         /**
@@ -108,35 +120,27 @@
          * @returns {Promise}
          */
         function _previousState() {
-            var next = Storage.get(keysHash.next);
-            !!next && Storage.push(keysHash.front, next);
+            var last = Storage.get(keysHash.last);
 
-            var toBeNext = Storage.get(keysHash.current);
-            Storage.set(keysHash.next, toBeNext);
-
-            var toBeCurrent = Storage.get(keysHash.prev);
-            Storage.set(keysHash.current, toBeCurrent);
-
-            var toBePrev = Storage.pop(keysHash.back);
-            Storage.set(keysHash.prev, toBePrev);
-
-            return $q.when({current: toBeCurrent, prev: toBePrev, next: toBeNext});
-        }
-
-        function _exact(word) {
-            var toBeCurrent = Storage.get(keysHash.word(word.name));
-
-        }
-
-        function _nextStateCallback(state) {
-            return function _next(toBeNext) {
-                if (!toBeNext.name) toBeNext = null;
-                // todo: count not found state
-
-                Storage.setIfNotExist(keysHash.word(toBeNext.name), toBeNext);
-                Storage.set(keysHash.next, toBeNext);
-                return $q.when(ng.extend(state, {next: toBeNext}));
+            var toBeCurrentKey = Storage.get(keysHash.prev(last.name));
+            if (!toBeCurrentKey) {
+                // todo: empty state
+                return;
             }
+
+            var toBeCurrent = Storage.get(toBeCurrentKey);
+
+            Storage.set(keysHash.last, toBeCurrent);
+
+            return _getLastState(toBeCurrent);
+        }
+
+        function _exact(wordName) {
+            var toBeCurrent = Storage.get(keysHash.word(wordName));
+
+            Storage.set(keysHash.last, toBeCurrent);
+
+            return _getLastState(toBeCurrent);
         }
     }
 })();

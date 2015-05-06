@@ -45,20 +45,24 @@
         function _addSchedule(word, clickHandler) {
             var notifications = [
                 // todo: remove testing notifications
-                //_.extend({}, notificationTemplate, {at: moment().add(1, 'm').toDate(), id: Counter.increment()}),
-                //_.extend({}, notificationTemplate, {at: moment().add(2, 'm').toDate(), id: Counter.increment()}),
-                //_.extend({}, notificationTemplate, {at: moment().add(3, 'm').toDate(), id: Counter.increment()}),
-                //_.extend({}, notificationTemplate, {at: moment().add(4, 'm').toDate(), id: Counter.increment()}),
+                {title: word.name, text: word.definition, at: moment().add(1, 'm').toDate(), id: Counter.increment()},
+                {title: word.name, text: word.definition, at: moment().add(2, 'm').toDate(), id: Counter.increment()},
+                //{title: word.name, text: word.definition}, {at: moment().add(3, 'm').toDate(), id: Counter.increment()},
+                //{title: word.name, text: word.definition}, {at: moment().add(4, 'm').toDate(), id: Counter.increment()},
 
-                _buildNotification(word, 2),
-                _buildNotification(word, 3),
-                _buildNotification(word, 5),
-                _buildNotification(word, 8),
-                _buildNotification(word, 13)
+                //_buildNotification(word, 2),
+                //_buildNotification(word, 3),
+                //_buildNotification(word, 5),
+                //_buildNotification(word, 8),
+                //_buildNotification(word, 13)
             ];
 
             $ionicPlatform.ready(function () {
                 $window.cordova.plugins.notification.local.schedule(notifications);
+
+                $window.cordova.plugins.notification.local.on('click', function (notification) {
+                    clickHandler(notification.title);
+                });
             });
             // todo: add 'click' event handler - 'clickHandler'
         }

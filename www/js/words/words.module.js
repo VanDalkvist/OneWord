@@ -10,15 +10,19 @@
         var stateBuilders = {
             current: function () {
                 var provider = this;
-                return provider.current();
+                return provider.current.apply(provider, Array.prototype.slice.call(arguments, 0));
             },
             back: function () {
                 var provider = this;
-                return provider.previous();
+                return provider.previous.apply(provider, Array.prototype.slice.call(arguments, 0));
             },
             forward: function () {
                 var provider = this;
-                return provider.next();
+                return provider.next.apply(provider, Array.prototype.slice.call(arguments, 0));
+            },
+            exact: function () {
+                var provider = this;
+                return provider.exact.apply(provider, Array.prototype.slice.call(arguments, 0));
             }
         };
 
@@ -36,7 +40,7 @@
                 controller: 'WordCtrl as word',
                 resolve: {
                     state: ['$stateParams', 'State', function ($stateParams, State) {
-                        return stateBuilders[$stateParams.direction].call(State);
+                        return stateBuilders[$stateParams.direction].apply(State, [$stateParams.name]);
                     }]
                 }
             });
