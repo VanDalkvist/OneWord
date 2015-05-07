@@ -35,24 +35,19 @@
         }
 
         /**
-         * 1. Add schedule for word (2, 3, 5, 8, 13)
+         * 1. Add schedule by days (2, 3, 5, 8, 13) for word
          * 2. Save notifications ids to storage
          * @param word
+         * @param clickHandler
          */
         function _addSchedule(word, clickHandler) {
-            var notifications = [
-                // todo: remove testing notifications
-                {title: word.name, text: word.definition, at: moment().add(1, 'm').toDate(), id: Counter.increment()},
-                {title: word.name, text: word.definition, at: moment().add(2, 'm').toDate(), id: Counter.increment()},
-                //{title: word.name, text: word.definition}, {at: moment().add(3, 'm').toDate(), id: Counter.increment()},
-                //{title: word.name, text: word.definition}, {at: moment().add(4, 'm').toDate(), id: Counter.increment()},
 
-                //_buildNotification(word, 2),
-                //_buildNotification(word, 3),
-                //_buildNotification(word, 5),
-                //_buildNotification(word, 8),
-                //_buildNotification(word, 13)
-            ];
+            //{title: word.name, text: word.definition, at: moment().add(1, 'm').toDate(), id: Counter.increment()},
+
+            var days = [2, 3, 5, 8, 13];
+            var notifications = days.map(function (day) {
+                return _buildNotification(word, day);
+            });
 
             $ionicPlatform.ready(function () {
                 $window.cordova.plugins.notification.local.schedule(notifications);
