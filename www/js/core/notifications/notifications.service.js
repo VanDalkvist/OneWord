@@ -10,12 +10,9 @@
 
         // initialization
 
-        // todo: move to constants
-        var colon = ':';
         var keysHash = {
-            scheduled: 'scheduled',
             word: function (wordName) {
-                return this.scheduled + colon + wordName;
+                return "scheduled: " + wordName;
             }
         };
 
@@ -64,7 +61,6 @@
                     clickHandler(notification.title);
                 });
             });
-            // todo: add 'click' event handler - 'clickHandler'
         }
 
         function _buildNotification(word, day, id) {
