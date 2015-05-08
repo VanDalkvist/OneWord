@@ -7,4 +7,4 @@ App:
 
 Server:
 
-[![Dependency Status](https://www.versioneye.com/user/projects/554c66ed5d47f2623100021e/badge.svg?style=flat)](https://www.versioneye.com/user/projects/554c66ed5d47f2623100021e)
+[![Dependency Status](https://www.versioneye.com/user/projects/554c66af5d47f2fcb80001ac/badge.svg?style=flat)](https://www.versioneye.com/user/projects/554c66af5d47f2fcb80001ac)
