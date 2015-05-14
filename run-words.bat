@@ -1,0 +1,1 @@
+ngrok http -subdomain=words 3000
