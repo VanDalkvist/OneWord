@@ -24,6 +24,8 @@
     "org.apache.cordova.device",
     "org.apache.cordova.console",
     "com.ionic.keyboard",
-    "de.appplant.cordova.plugin.local-notification"
-  ]
+    "de.appplant.cordova.plugin.local-notification",
+    "com.clone.phonegap.plugins.pushplugin"
+  ],
+  "cordovaPlatforms": []
 }
