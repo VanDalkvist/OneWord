@@ -1,0 +1,1 @@
+npm i -g gulp --msvs-version=2013 && npm i --msvs-version=2013 && bower i && cd server && npm i --msvs-version=2013 && cd ../
