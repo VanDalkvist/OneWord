@@ -12,6 +12,12 @@ module.exports.fetch = _fetch;
 
 // private methods
 
+/**
+ * Returns many words
+ * @param instance
+ * @param options
+ * @returns {*}
+ */
 function _fetch(instance, options) {
 
     // setting defaults

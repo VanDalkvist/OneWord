@@ -4,5 +4,9 @@
     "options": {
       "count": 10
     }
+  },
+  "daily words": {
+    "period": "1 day",
+    "options": {}
   }
 }

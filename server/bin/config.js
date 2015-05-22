@@ -14,7 +14,10 @@ function _buildConfig() {
         },
         "port": (process.env.ENV === 'test') ? 3001 : (process.env.PORT || 3000),
         "isDebug": _isDebug.bind(this),
-        "env": process.env.NODE_ENV || process.env.ENV || 'dev'
+        "env": process.env.NODE_ENV || process.env.ENV || 'dev',
+        "google-api": {
+            "key": process.env.GOOGLE_API_KEY
+        }
     };
 
     function _isDebug() {
