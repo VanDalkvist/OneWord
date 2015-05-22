@@ -39,13 +39,14 @@ function _configureJobs(instance) {
     var schedule = this;
 
     _.forEach(taskDescriptions, function (task, name) {
-        schedule.define(name, function job(job, done) {
+        schedule.define(name, _job);
+        schedule.every(task.period, name);
+
+        function _job(job, done) {
             console.log("job '" + name + "' was started");
             var taskResult = tasks[name](instance, task.options);
             _processTask(taskResult, done);
-        });
-
-        schedule.every(task.period, name);
+        }
     });
 }
 
