@@ -27,11 +27,13 @@
         // private functions
 
         function _init() {
-            $window.cordova.plugins.notification.local.on('schedule', function (notification) {
-                $log.debug("scheduled: " + notification.id + " notification for word: " + notification.title);
+            $window.cordova.plugins.notification.local.on('schedule', _setSchedule);
+        }
 
-                Storage.push(keysHash.word(notification.title), notification.id);
-            });
+        function _setSchedule(notification) {
+            $log.debug("scheduled: " + notification.id + " notification for word: " + notification.title);
+
+            Storage.push(keysHash.word(notification.title), notification.id);
         }
 
         /**
