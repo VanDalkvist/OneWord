@@ -103,6 +103,8 @@ function Storage(db) {
     }
 
     function _prepareWord(word) {
+        if (!word) return word;
+
         delete word._id;
         delete word.number;
         return word;
