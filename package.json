@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "OneWord: An Ionic project",
   "dependencies": {
-    "cordova-android": "^4.0.1",
+    "cordova-android": "^4.0.2",
     "cordova-ios": "^3.8.0",
     "cors": "^2.6.0",
     "gulp": "^3.8.11",
