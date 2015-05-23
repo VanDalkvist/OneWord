@@ -30,13 +30,12 @@ function _processGrabbing(instance, options) {
 function _removeWords(db) {
     var deferred = Q.defer();
     // todo: clear deprecated
-    db.collection('words').remove({}, function (err, res) {
+    db.collection('words').removeMany({}, function (err, res) {
         if (err) {
-            console.log("error during removing: ", util.format(err.stack));
-            deferred.reject(err);
-            return;
+            console.log("Error during removing words: ", util.format(err.stack));
+            return deferred.reject(err);
         }
-        console.log("successfully removed.");
+        console.log("Words were successfully removed.");
         deferred.resolve(res);
     });
     return deferred.promise;
@@ -45,11 +44,10 @@ function _removeWords(db) {
 function _insertWords(db, result) {
     var deferred = Q.defer();
     // todo: clear deprecated
-    db.collection('words').insert(result, function (err, res) {
+    db.collection('words').insertMany(result, function (err, res) {
         if (err) {
-            console.log("error during saving: ", util.format(err.stack));
-            deferred.reject(err);
-            return;
+            console.log("error during saving words: ", util.format(err.stack));
+            return deferred.reject(err);
         }
         console.log("successfully inserted.");
         deferred.resolve(res);
