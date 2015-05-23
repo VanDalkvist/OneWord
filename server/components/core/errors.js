@@ -1,6 +1,5 @@
 // dependencies
 
-var errors = require('debug')('app:errors');
 var util = require('util');
 
 // initialization
@@ -16,7 +15,7 @@ module.exports = Errors;
 // private methods
 
 function _criticalError(err) {
-    errors('uncaughtException: ', util.format(err.stack));
+    console.error('uncaughtException: ', util.format(err.stack));
     setTimeout(function () {
         // todo: restart
         process.exit(-1);
