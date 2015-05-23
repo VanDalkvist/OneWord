@@ -10,7 +10,7 @@
 
         _configureLogging();
 
-        _configureHttp();
+        _configureHttp.then(_navigateToWord);
 
         function _onCordovaReady() {
             // Hide the accessory bar by default
@@ -26,12 +26,12 @@
         }
 
         function _configureHttp() {
-            AuthService.authorize().then(function (result) {
-                $http.defaults.headers.common['User-Key'] = result.key;
-                _navigateToWord();
-            }, function (err) {
-                // todo: show something like error dialog
-            });
+            return AuthService.authorize()
+                .then(function (result) {
+                    $http.defaults.headers.common['User-Key'] = result.key;
+                }, function (err) {
+                    // todo: show something like error dialog
+                });
         }
 
         function _configureLogging() {
