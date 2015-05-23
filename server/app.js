@@ -43,7 +43,6 @@ function _run() {
         .then(function (instance) {
             _configureCors(instance);
             _configureAPI(instance);
-            _configureGCM(instance);
             return instance;
         });
 }
@@ -120,8 +119,4 @@ function _configureAPI(instance) {
     app.use('/api/words', words.bootstrap(instance));
 
     errors.bootstrap(instance);
-}
-
-function _configureGCM(instance) {
-
 }
