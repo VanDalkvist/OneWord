@@ -6,13 +6,13 @@
     Run.$inject = ['$rootScope', '$http', '$state', '$timeout', '$log', '$ionicPlatform', 'AuthService', 'State'];
 
     function Run($rootScope, $http, $state, $timeout, $log, $ionicPlatform, AuthService, State) {
-        $ionicPlatform.ready(_onCordovaReady);
+        $ionicPlatform.ready(_configurePlugins);
 
         _configureLogging();
 
-        _configureHttp.then(_navigateToWord);
+        _configureHttp().then(_navigateToWord);
 
-        function _onCordovaReady() {
+        function _configurePlugins() {
             // Hide the accessory bar by default
             // remove this to show the accessory bar above the keyboard for form inputs
             if (window.cordova && window.cordova.plugins.Keyboard) {
