@@ -61,14 +61,15 @@ function _dailyWordsJob(instance, options) {
 
     var gcm = require('node-gcm');
 
-    var sender = new gcm.Sender(config['google-api'].key);
+    var sender = new gcm.Sender(config['google-api']);
 
-    // generate the message
-    var message = new gcm.Message();
-    message.addData('key1', 'msg1');
+    // todo: generate the message
+    var message = new gcm.Message({
+        data: {}
+    });
 
-    // get reg ids
-    var regIds = ['YOUR_REG_ID_HERE'];
+    // todo: get reg ids
+    var regIds = [''];
     sender.send(message, regIds, function (err, result) {
         if (err) console.error(err);
         else console.log(result);

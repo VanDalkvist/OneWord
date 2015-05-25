@@ -3,14 +3,18 @@
 
     angular.module('one-word').run(Run);
 
-    Run.$inject = ['$rootScope', '$http', '$state', '$timeout', '$log', '$ionicPlatform', 'AuthService', 'State'];
+    Run.$inject = ['$rootScope', '$window', '$http', '$state', '$timeout', '$log', '$ionicPlatform', 'AuthService', 'State', 'PushNotifications'];
 
-    function Run($rootScope, $http, $state, $timeout, $log, $ionicPlatform, AuthService, State) {
+    function Run($rootScope, $window, $http, $state, $timeout, $log, $ionicPlatform, AuthService, State, PushNotifications) {
         $ionicPlatform.ready(_configurePlugins);
 
         _configureLogging();
 
-        _configureHttp().then(_navigateToWord);
+        _configureHttp().then(_navigateToWord).then(function () {
+            PushNotifications.start();
+        });
+
+        $window.onNotification = PushNotifications.onNotification;
 
         function _configurePlugins() {
             // Hide the accessory bar by default
@@ -40,7 +44,7 @@
 
         function _navigateToWord() {
             $log.log('navigate to word...');
-            State.current().then(function (state) {
+            return State.current().then(function (state) {
                 $timeout(function () {
                     $state.go('word', {name: state.current.name});
                 });
