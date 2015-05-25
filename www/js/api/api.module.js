@@ -9,6 +9,6 @@
 
     function Config(EnvironmentProvider) {
         // todo: configure server url by gulp task
-        EnvironmentProvider.setServerUrl('http://localhost:3000');
+        EnvironmentProvider.setServerUrl('http://words.ngrok.io');
     }
 })();
