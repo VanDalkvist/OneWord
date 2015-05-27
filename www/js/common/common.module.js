@@ -8,5 +8,6 @@
     function Config(EnvironmentProvider) {
         EnvironmentProvider.injectService('storage', 'LocalStorage');
         EnvironmentProvider.injectService('notifications', 'LocalNotifications');
+        //EnvironmentProvider.injectService('push', 'PushNotifications');
     }
 })();

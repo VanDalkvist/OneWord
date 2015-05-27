@@ -3,18 +3,32 @@
 
     angular.module('one-word').run(Run);
 
-    Run.$inject = ['$rootScope', '$window', '$http', '$state', '$timeout', '$log', '$ionicPlatform', 'AuthService', 'State', 'PushNotifications'];
+    Run.$inject = ['$rootScope', '$window', '$http', '$state', '$timeout', '$log', '$ionicPlatform', 'AuthService', 'State', 'PushNotifications', 'PubSub'];
 
-    function Run($rootScope, $window, $http, $state, $timeout, $log, $ionicPlatform, AuthService, State, PushNotifications) {
+    function Run($rootScope, $window, $http, $state, $timeout, $log, $ionicPlatform, AuthService, State, PushNotifications, PubSub) {
         $ionicPlatform.ready(_configurePlugins);
 
         _configureLogging();
 
-        _configureHttp().then(_navigateToWord).then(function () {
+        // todo: unsubscribe
+        PubSub.subscribe('device:registered', _onDeviceRegistered);
+
+        _configureHttp().then(function () {
             PushNotifications.start();
+            return _navigateToWord();
         });
 
         $window.onNotification = PushNotifications.onNotification;
+
+        function _onDeviceRegistered(registrationId) {
+            return AuthService.sendRegistrationInfo(registrationId)
+                .then(function (result) {
+                    $log.log('RegistrationId was successfully saved.');
+                }, function (err) {
+                    $log.error('RegistrationId was not saved.');
+                    // todo: show something like error dialog
+                });
+        }
 
         function _configurePlugins() {
             // Hide the accessory bar by default
@@ -29,8 +43,8 @@
             }
         }
 
-        function _configureHttp() {
-            return AuthService.authorize()
+        function _configureHttp(regId) {
+            return AuthService.authorize(regId)
                 .then(function (result) {
                     $http.defaults.headers.common['User-Key'] = result.key;
                 }, function (err) {

@@ -19,8 +19,12 @@ function _bootstrap(instance) {
     var Storage = instance.get('storage');
 
     // todo: configure cors
-    router.options('/register', cors()); // enable pre-flight request
+    // enable pre-flight request
+    router.options('/register', cors());
+    router.options('/configure', cors());
+
     router.post('/register', _register);
+    router.post('/configure', _configure);
 
     app.use('*', _isAuthenticated);
 
@@ -28,28 +32,34 @@ function _bootstrap(instance) {
 
     function _register(req, res, next) {
         var key = req.body.uid;
+        var regId = req.body.regId;
         if (!key) return next(new Error("Invalid user id."));
 
-        // todo: add registration Id for push plugin
-
         usersLogger("We are in the 'register' route. Body is %s.", util.format(req.body));
-        Storage.saveUser(key).then(function () {
+        Storage.saveUser(key, regId).then(function () {
             res.status(200).send();
         }, function (err) {
-            // todo: log error
-            res.status(500).send(err);
+            next(err);
+        });
+    }
+
+    function _configure(req, res, next) {
+        var key = req.body.uid;
+        if (!key) return next(new Error("Invalid user id."));
+
+        var regId = req.body.regId;
+        usersLogger("We are in the 'configure' route. Body is %s.", util.format(req.body));
+        Storage.updateUser(key, regId).then(function () {
+            res.status(200).send();
+        }, function (err) {
+            next(err);
         });
     }
 
     function _isAuthenticated(req, res, next) {
         var authHeader = 'User-Key';
         req.userId = req.get(authHeader);
-        req.user = _getUser.call(Storage, req.userId);
+        req.user = Storage.getUser(req.userId);
         next();
-    }
-
-    function _getUser(userId) {
-        var storage = this;
-        return storage.getUser(userId);
     }
 }

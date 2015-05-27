@@ -27,6 +27,7 @@ function Storage(db) {
     this.getWord = _getWord;
     this.getUser = _getUser;
     this.saveUser = _createUser;
+    this.updateUser = _updateUser;
 
     function _getWord(userId) {
         return _getNextWordNumber(userId).then(function (wordNumber) {
@@ -49,13 +50,26 @@ function Storage(db) {
         return deferred.promise;
     }
 
-    function _createUser(userId) {
+    function _createUser(userId, regId) {
         var deferred = Q.defer();
 
-        var userModel = {userId: userId, word: {number: 0}};
+        var userModel = {userId: userId, word: {number: 0}, regId: regId};
         usersCollection.insertOne(userModel, function (err, res) {
             if (err) return deferred.reject(new Error("Cannot save user with id: '%s'", userId));
-            deferred.resolve({});
+            deferred.resolve({userId: userId});
+        });
+
+        return deferred.promise;
+    }
+
+    function _updateUser(userId, regId) {
+        var deferred = Q.defer();
+
+        var filterModel = {userId: userId};
+        var updateModel = {$set: {regId: regId}};
+        usersCollection.updateOne(filterModel, updateModel, function (err, res) {
+            if (err) return deferred.reject(new Error("Cannot save user with id: '%s'", userId));
+            deferred.resolve(filterModel);
         });
 
         return deferred.promise;

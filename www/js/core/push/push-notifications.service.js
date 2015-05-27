@@ -4,15 +4,16 @@
 
     angular.module('one-word.core').service('PushNotifications', Service);
 
-    Service.$inject = ['$window', '$log', '$ionicPlatform', 'Storage'];
+    Service.$inject = ['$window', '$log', '$ionicPlatform', 'Storage', 'PubSub'];
 
-    function Service($window, $log, $ionicPlatform, Storage) {
+    function Service($window, $log, $ionicPlatform, Storage, PubSub) {
 
         var pushPlugin = undefined;
 
         // todo: create shared constant with keys
         var keysHash = {
-            regId: "management:user:registrationId"
+            regId: "management:user:registrationId",
+            isRegistered: "management:user:isRegistered"
         };
 
         var handlers = {
@@ -32,17 +33,21 @@
             $ionicPlatform.ready(function () {
                 pushPlugin = $window.plugins.pushNotification;
 
-                var regId = Storage.get(keysHash.regId);
+                var isRegistered = Storage.get(keysHash.isRegistered);
 
-                !regId && _sendRegistrationRequest();
+                !isRegistered && _sendRegistrationRequest();
             });
         }
 
         function _onNotificationRegistered(notification) {
-            if (notification.regid.length <= 0) return;
+            var regId = notification.regid;
+            if (regId.length <= 0) return; // todo: ?
 
-            $log.log("regID = " + notification.regid);
-            Storage.set(keysHash.regId, notification.regid);
+            $log.log("regId = " + regId);
+            Storage.set(keysHash.regId, regId);
+            Storage.set(keysHash.isRegistered, true);
+
+            PubSub.publish('device:registered', regId);
         }
 
         function _onMessageReceived(notification) {
