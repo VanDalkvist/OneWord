@@ -6,7 +6,7 @@ if not defined sevenzip (
 	goto :end
 )
 
-cmd /c "%sevenzip% x test.zip -oC:\"
+cmd /c "%sevenzip% x test.zip -p%1" < temp
 if errorlevel 1 (
 	echo cannot open archive.
 )
