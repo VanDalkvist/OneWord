@@ -6,10 +6,10 @@ var childProcess = require('child_process');
 
 var commands = [
     {text: 'npm i --msvs-version=2013', name: 'app dev dependencies'},
-    {text: 'bower i', name: 'app client dependencies'},
-    {text: 'npm i -g gulp --msvs-version=2013', name: 'gulp'},
+    {text: 'installation\\npm-i-globally bower && bower i', name: 'app client dependencies'},
+    {text: 'installation\\npm-i-globally gulp', name: 'gulp'},
     {text: 'cd server && npm i --msvs-version=2013 && cd ../', name: 'server node dependencies'},
-    {text: 'npm i -g ionic && ionic state restore --plugins', name: 'ionic'}
+    {text: 'installation\\npm-i-globally ionic && ionic state restore --plugins', name: 'ionic'}
 ];
 
 commands.forEach(_start);
