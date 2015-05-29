@@ -59,10 +59,6 @@
         }
 
         function _sendRegistrationRequest() {
-            // todo: set DROPBOX env
-            // todo: add script with getting sender_id
-
-            // todo: senderId - get from config
             pushPlugin.register(function _successHandler() {
                 $log.log("successful gcm registration");
             }, function _errorHandler(err) {
