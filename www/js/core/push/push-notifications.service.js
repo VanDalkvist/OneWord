@@ -4,9 +4,9 @@
 
     angular.module('one-word.core').service('PushNotifications', Service);
 
-    Service.$inject = ['$window', '$log', '$ionicPlatform', 'Storage', 'PubSub'];
+    Service.$inject = ['$window', '$log', '$ionicPlatform', 'Storage', 'PubSub', 'Config'];
 
-    function Service($window, $log, $ionicPlatform, Storage, PubSub) {
+    function Service($window, $log, $ionicPlatform, Storage, PubSub, Config) {
 
         var pushPlugin = undefined;
 
@@ -68,7 +68,7 @@
             }, function _errorHandler(err) {
                 $log.log("failure gcm registration");
             }, {
-                "senderID": 'senderId',
+                "senderID": Config.senderId,
                 "ecb": 'onNotification'
             });
         }
