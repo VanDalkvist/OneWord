@@ -27,5 +27,7 @@
     "de.appplant.cordova.plugin.local-notification",
     "com.clone.phonegap.plugins.pushplugin"
   ],
-  "cordovaPlatforms": []
+  "cordovaPlatforms": [
+    "android"
+  ]
 }
