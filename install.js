@@ -9,7 +9,7 @@ var commands = [
     {text: 'installation\\npm-i-globally bower && bower i', name: 'app client dependencies'},
     {text: 'installation\\npm-i-globally gulp', name: 'gulp'},
     {text: 'cd server && npm i --msvs-version=2013 && cd ../', name: 'server node dependencies'},
-    {text: 'installation\\npm-i-globally ionic && ionic state restore --plugins', name: 'ionic'}
+    {text: 'installation\\npm-i-globally cordova && installation\\npm-i-globally ionic && ionic state restore --plugins', name: 'ionic'}
 ];
 
 commands.forEach(_start);
