@@ -5,4 +5,3 @@
      1. "SDK Platform" for android-22 (choose specific version)
      2. "Android SDK Platform-tools (latest)
      3. "Android SDK Build-tools" (latest)
-
