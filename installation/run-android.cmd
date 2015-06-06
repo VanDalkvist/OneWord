@@ -1,4 +1,4 @@
 adb devices
 adb uninstall %CORDOVA_APP%
 
-ionic run -c
+ionic run android -c -l
