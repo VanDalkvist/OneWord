@@ -29,7 +29,10 @@
 
                 var isRegistered = Storage.get(Keys.Push.isRegistered);
 
-                !isRegistered && _sendRegistrationRequest();
+                if (!isRegistered)
+                    return _sendRegistrationRequest();
+
+                PubSub.publish('device:registered', Storage.get(Keys.Push.regId));
             });
         }
 
@@ -53,7 +56,7 @@
         }
 
         function _sendRegistrationRequest() {
-            pushPlugin.register(function _successHandler() {
+            return pushPlugin.register(function _successHandler() {
                 $log.log("successful gcm registration");
             }, function _errorHandler(err) {
                 $log.log("failure gcm registration");
