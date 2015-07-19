@@ -38,7 +38,10 @@
 
         function _onNotificationRegistered(notification) {
             var regId = notification.regid;
-            if (regId.length <= 0) return; // todo: ?
+            if (!regId || regId.length <= 0) {
+                $log.log("Something went wrong...", notification);
+                return;
+            } // todo: ?
 
             $log.log("regId = " + regId);
             Storage.set(Keys.Push.regId, regId);
@@ -56,7 +59,12 @@
         }
 
         function _sendRegistrationRequest() {
-            return pushPlugin.register(function _successHandler() {
+            if (Config.senderId === '{{senderId}}') {
+                $log.log("Wrong sender id.");
+                return;
+            }
+
+            return pushPlugin.register(function _successHandler(res, data) {
                 $log.log("successful gcm registration");
             }, function _errorHandler(err) {
                 $log.log("failure gcm registration");

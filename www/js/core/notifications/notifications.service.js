@@ -10,7 +10,6 @@
 
         // initialization
 
-        var localNotificationsPlugin;
         var keysHash = {
             word: function (wordName) {
                 return "scheduled: " + wordName;
@@ -28,8 +27,8 @@
         // private functions
 
         function _init() {
-            localNotificationsPlugin = $window.cordova.plugins.notification.local;
-            localNotificationsPlugin.on('schedule', _setSchedule);
+            var localNotificationsPlugin = $window.cordova.plugins.notification.local;
+            localNotificationsPlugin && (localNotificationsPlugin.on('schedule', _setSchedule));
         }
 
         function _setSchedule(notification) {
@@ -54,10 +53,9 @@
             });
 
             $ionicPlatform.ready(function () {
-
-                localNotificationsPlugin.schedule(notifications);
-
-                localNotificationsPlugin.on('click', function (notification) {
+                var localNotifications = $window.cordova.plugins.notification.local;
+                //localNotifications.schedule(notifications); // todo
+                localNotifications.on('click', function (notification) {
                     clickHandler(notification.title);
                 });
             });
@@ -80,7 +78,7 @@
          */
         function _removeFromSchedule(word) {
             var ids = Storage.get(keysHash.word(word.name));
-            localNotificationsPlugin.cancel(ids, function () {
+            $window.cordova.plugins.notification.local.cancel(ids, function () {
                 $log.debug("canceled: " + ids.join(', '));
             });
         }
