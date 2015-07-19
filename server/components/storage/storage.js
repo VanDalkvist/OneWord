@@ -24,18 +24,22 @@ function Storage(db) {
     var wordsCollection = db.collection('words');
     var usersCollection = db.collection('users');
 
-    this.getWord = _getWord;
-    this.getUser = _getUser;
-    this.saveUser = _createUser;
-    this.updateUser = _updateUser;
+    var storage = this;
+
+    storage.getWord = _getWord;
+    storage.getUser = _getUser;
+    storage.saveUser = _createUser;
+    storage.updateUser = _updateUser;
 
     function _getWord(userId) {
-        return _getNextWordNumber(userId).then(function (wordNumber) {
-            // todo: rewrite to NotFound error
-            if (!_.isNumber(wordNumber) && _.isEmpty(wordNumber)) return null;
+        return _getNextWordNumber(userId)
+            .then(function (wordNumber) {
+                // todo: rewrite to NotFound error
+                if (!_.isNumber(wordNumber) && _.isEmpty(wordNumber)) return null;
 
-            return _findWord(wordNumber);
-        });
+                return wordNumber;
+            })
+            .then(_findWord);
     }
 
     function _getUser(userId) {

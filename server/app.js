@@ -33,6 +33,9 @@ module.exports.bootstrap = _bootstrap;
 // private functions
 
 function _run() {
+
+    require('./components/core/extensions');
+
     //job.start('./server/components/scheduler/schedule');
 
     return _build()
@@ -66,6 +69,8 @@ function _configureExpressApp(di) {
 }
 
 function _bootstrap() {
+    require('./components/core/extensions');
+
     return _build().then(_provideInstance);
 }
 
