@@ -16,7 +16,7 @@ var builders = {
         return _create(WordsMock, args);
     },
     test: function (args) {
-        return _create(WordsMock, args);
+        return _create(Words, args);
     },
     dev: function (args) {
         return _create(Words, args);
