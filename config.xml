@@ -22,6 +22,9 @@
     <param name="id" value="de.appplant.cordova.plugin.local-notification"/>
     <param name="url" value="https://github.com/katzer/cordova-plugin-local-notifications"/>
   </feature>
+  <feature name="PushPlugin">
+    <param name="android-package" value="com.plugin.gcm.PushPlugin" />
+  </feature>
   <platform name="android">
     <icon src="resources/android/icon/drawable-ldpi-icon.png" density="ldpi"/>
     <icon src="resources/android/icon/drawable-mdpi-icon.png" density="mdpi"/>
