@@ -57,15 +57,6 @@ function _dailyWordsJob(instance, options) {
         return deferred.promise;
     }
 
-    function _groupIdsByWordName(wordsHash) {
-        console.log("Grouping registering ids by word name...");
-        var groupedIdsByWord = {};
-        _.each(wordsHash, function (grouped, wordName) {
-            groupedIdsByWord[wordName] = _.pluck(grouped, 'regId');
-        });
-        return groupedIdsByWord;
-    }
-
     function _buildSender() {
         var apiKey = config['google-api'].key;
         return new gcm.Sender(apiKey);
@@ -90,5 +81,14 @@ function _dailyWordsJob(instance, options) {
             });
             return deferred.promise;
         });
+    }
+
+    function _groupIdsByWordName(wordsHash) {
+        console.log("Grouping registering ids by word name...");
+        var groupedIdsByWord = {};
+        _.each(wordsHash, function (grouped, wordName) {
+            groupedIdsByWord[wordName] = _.pluck(grouped, 'regId');
+        });
+        return groupedIdsByWord;
     }
 }
