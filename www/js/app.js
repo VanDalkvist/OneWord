@@ -3,9 +3,17 @@
 
     angular.module('one-word').run(Run);
 
-    Run.$inject = ['$rootScope', '$window', '$http', '$state', '$timeout', '$log', '$ionicPlatform', 'ionic', '$cordovaToast', 'AuthService', 'State', 'PushNotifications', 'PubSub'];
+    Run.$inject = [
+        '$rootScope', '$window', '$http', '$state',
+        '$timeout', '$log', '$ionicPlatform',
+        'ionic', '$cordovaToast', '$cordovaDialogs',
+        'AuthService', 'State', 'PushNotifications', 'PubSub'
+    ];
 
-    function Run($rootScope, $window, $http, $state, $timeout, $log, $ionicPlatform, ionic, $cordovaToast, AuthService, State, PushNotifications, PubSub) {
+    function Run($rootScope, $window, $http, $state,
+                 $timeout, $log, $ionicPlatform,
+                 ionic, $cordovaToast, $cordovaDialogs,
+                 AuthService, State, PushNotifications, PubSub) {
         $ionicPlatform.ready(_configurePlugins);
 
         _configureLogging();
@@ -31,7 +39,10 @@
                     $log.log('RegistrationId was successfully saved.');
                 }, function (err) {
                     $log.error('RegistrationId was not saved.');
-                    // todo: show something like error dialog
+                    $cordovaDialogs.alert('Internal error. Please check your internet connection.', 'Error', 'Exit')
+                        .then(function() {
+                            ionic.Platform.exitApp();
+                        });
                 });
         }
 

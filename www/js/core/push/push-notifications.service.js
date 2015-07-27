@@ -4,9 +4,13 @@
 
     angular.module('one-word.core').service('PushNotifications', Service);
 
-    Service.$inject = ['$window', '$log', '$ionicPlatform', 'Storage', 'PubSub', 'Config', 'Keys'];
+    Service.$inject = [
+        '$window', '$log', '$ionicPlatform',
+        'Storage', 'PubSub', 'Config', 'Keys'
+    ];
 
-    function Service($window, $log, $ionicPlatform, Storage, PubSub, Config, Keys) {
+    function Service($window, $log, $ionicPlatform,
+                     Storage, PubSub, Config, Keys) {
 
         var pushPlugin = undefined;
 
