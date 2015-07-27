@@ -17,4 +17,8 @@
         return Object.freeze(moment);
     })());
 
+    angular.module('one-word.common').constant('ionic', (function Ionic() {
+        return ionic;
+    })());
+
 })();
