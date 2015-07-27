@@ -3,9 +3,9 @@
 
     angular.module('one-word').run(Run);
 
-    Run.$inject = ['$rootScope', '$window', '$http', '$state', '$timeout', '$log', '$ionicPlatform', 'ionic', 'AuthService', 'State', 'PushNotifications', 'PubSub'];
+    Run.$inject = ['$rootScope', '$window', '$http', '$state', '$timeout', '$log', '$ionicPlatform', 'ionic', '$cordovaToast', 'AuthService', 'State', 'PushNotifications', 'PubSub'];
 
-    function Run($rootScope, $window, $http, $state, $timeout, $log, $ionicPlatform, ionic, AuthService, State, PushNotifications, PubSub) {
+    function Run($rootScope, $window, $http, $state, $timeout, $log, $ionicPlatform, ionic, $cordovaToast, AuthService, State, PushNotifications, PubSub) {
         $ionicPlatform.ready(_configurePlugins);
 
         _configureLogging();
@@ -76,6 +76,7 @@
                 ionic.Platform.exitApp();
             } else {
                 backButtonPressed = true;
+                $cordovaToast.showShortBottom('Press one more time to exit...');
                 backButtonTimer = setTimeout(function () {
                     backButtonPressed = false;
                     backButtonTimer = null;
