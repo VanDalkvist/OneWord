@@ -39,8 +39,14 @@
                 templateUrl: "js/words/word.html",
                 controller: 'WordCtrl as word',
                 resolve: {
-                    state: ['$stateParams', 'State', function ($stateParams, State) {
-                        return stateBuilders[$stateParams.direction].apply(State, [$stateParams.name]);
+                    state: ['$stateParams', 'State', 'AuthService', function ($stateParams, State, AuthService) {
+                        var authRequest = AuthService.authRequest();
+                        if (!authRequest)
+                            return stateBuilders[$stateParams.direction].apply(State, [$stateParams.name]);
+
+                        return authRequest.then(function () {
+                            return stateBuilders[$stateParams.direction].apply(State, [$stateParams.name]);
+                        });
                     }]
                 }
             });
