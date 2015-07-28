@@ -14,6 +14,7 @@
                  $timeout, $log, $ionicPlatform,
                  ionic, $cordovaToast, $cordovaDialogs,
                  AuthService, State, PushNotifications, PubSub) {
+
         $ionicPlatform.ready(_configurePlugins);
 
         _configureLogging();
