@@ -12,8 +12,6 @@
     function Service($window, $log, $ionicPlatform,
                      Storage, PubSub, Config, Keys) {
 
-        var pushPlugin = undefined;
-
         var handlers = {
             'registered': _onNotificationRegistered,
             'message': _onMessageReceived,
@@ -29,8 +27,6 @@
 
         function _start() {
             $ionicPlatform.ready(function () {
-                pushPlugin = $window.plugins.pushNotification;
-
                 var isRegistered = Storage.get(Keys.Push.isRegistered);
 
                 if (!isRegistered)
@@ -56,10 +52,11 @@
 
         function _onMessageReceived(notification) {
             // todo: load and navigate
+            $log.debug("Notification was received: ", notification);
         }
 
-        function _onErrorOccurred(notification) {
-
+        function _onErrorOccurred(err) {
+            $log.error("Error occurred : ", err);
         }
 
         function _sendRegistrationRequest() {
@@ -68,7 +65,7 @@
                 return;
             }
 
-            return pushPlugin.register(function _successHandler(res, data) {
+            return $window.plugins.pushNotification.register(function _successHandler(res, data) {
                 $log.log("successful gcm registration");
             }, function _errorHandler(err) {
                 $log.log("failure gcm registration");
