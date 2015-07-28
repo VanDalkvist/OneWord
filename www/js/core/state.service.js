@@ -4,9 +4,10 @@
 
     angular.module('one-word.core').service('State', Service);
 
-    Service.$inject = ['$q', 'ng', 'Word', 'Storage'];
+    Service.$inject = ['$q', '$log', 'Word', 'Storage'];
 
-    function Service($q, ng, Word, Storage) {
+    function Service($q, $log, Word, Storage) {
+
         var keysHash = {
             current: 'words:current',
             word: function (name) {
@@ -37,8 +38,12 @@
         function _currentState() {
             var last = Storage.get(keysHash.last);
 
-            if (!!last) return _getLastState(last);
+            if (!!last) {
+                $log.debug("Go to last saved state (current): ", last.name);
+                return _getLastState(last);
+            }
 
+            $log.debug("Loading new word and setting as last state.");
             var wordPromise = Word.random().then(_saveCurrent);
 
             return wordPromise.then(_buildElements);
@@ -103,10 +108,12 @@
             var toBeCurrentKey = Storage.get(keysHash.next(last.name));
             if (!toBeCurrentKey) {
                 // todo: empty state
+                $log.debug("There is no next word.");
                 return;
             }
-            var toBeCurrent = Storage.get(toBeCurrentKey);
 
+            $log.debug("Go to next state: ", toBeCurrentKey);
+            var toBeCurrent = Storage.get(toBeCurrentKey);
             Storage.set(keysHash.last, toBeCurrent);
 
             return _buildElements(toBeCurrent);
@@ -125,11 +132,12 @@
             var toBeCurrentKey = Storage.get(keysHash.prev(last.name));
             if (!toBeCurrentKey) {
                 // todo: empty state
+                $log.debug("There is no words to be previous.");
                 return;
             }
 
+            $log.debug("Go to previous state: ", toBeCurrentKey);
             var toBeCurrent = Storage.get(toBeCurrentKey);
-
             Storage.set(keysHash.last, toBeCurrent);
 
             return _getLastState(toBeCurrent);
@@ -138,6 +146,7 @@
         function _exact(wordName) {
             var toBeCurrent = Storage.get(keysHash.word(wordName));
 
+            $log.debug("Go to '" + wordName + "' state.");
             Storage.set(keysHash.last, toBeCurrent);
 
             return _getLastState(toBeCurrent);
