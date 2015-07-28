@@ -40,7 +40,7 @@
                 }, function (err) {
                     $log.error('RegistrationId was not saved.');
                     $cordovaDialogs.alert('Internal error. Please check your internet connection.', 'Error', 'Exit')
-                        .then(function() {
+                        .then(function () {
                             ionic.Platform.exitApp();
                         });
                 });
@@ -64,7 +64,10 @@
                 .then(function (result) {
                     $http.defaults.headers.common['User-Key'] = result.key;
                 }, function (err) {
-                    // todo: show something like error dialog
+                    $cordovaDialogs.alert('Internal error. Please check your internet connection.', 'Error', 'Exit')
+                        .then(function () {
+                            ionic.Platform.exitApp();
+                        });
                 });
         }
 
