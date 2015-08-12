@@ -109,7 +109,11 @@
             if (!toBeCurrentKey) {
                 // todo: empty state
                 $log.debug("There is no next word.");
-                return;
+                return $q.when({
+                    current: null,
+                    prev: last,
+                    next: null
+                });
             }
 
             $log.debug("Go to next state: ", toBeCurrentKey);

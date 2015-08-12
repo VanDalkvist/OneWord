@@ -15,8 +15,12 @@
 
         instance.vm = state;
 
-        if (state.current && !Notifications.isAssigned(state.current)) {
+        if (state && state.current && !Notifications.isAssigned(state.current)) {
             Notifications.sked(state.current, _redirectFromNotification);
+        }
+
+        if (state && !state.next && state.current) {
+            state.next = {};
         }
 
         // public functions
