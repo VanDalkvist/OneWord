@@ -3,9 +3,18 @@
 
     angular.module('one-word').run(Run);
 
-    Run.$inject = ['$rootScope', '$window', '$http', '$state', '$timeout', '$log', '$ionicPlatform', 'AuthService', 'State', 'PushNotifications', 'PubSub'];
+    Run.$inject = [
+        '$rootScope', '$window', '$http', '$state',
+        '$timeout', '$log', '$ionicPlatform',
+        'ionic', '$cordovaToast', '$cordovaDialogs',
+        'AuthService', 'State', 'PushNotifications', 'PubSub'
+    ];
 
-    function Run($rootScope, $window, $http, $state, $timeout, $log, $ionicPlatform, AuthService, State, PushNotifications, PubSub) {
+    function Run($rootScope, $window, $http, $state,
+                 $timeout, $log, $ionicPlatform,
+                 ionic, $cordovaToast, $cordovaDialogs,
+                 AuthService, State, PushNotifications, PubSub) {
+
         $ionicPlatform.ready(_configurePlugins);
 
         _configureLogging();
@@ -20,13 +29,21 @@
 
         $window.onNotification = PushNotifications.onNotification;
 
+        var backButtonPressed = false;
+        var backButtonTimer = null;
+
+        $ionicPlatform.registerBackButtonAction(_onBackButtonPressed, 101);
+
         function _onDeviceRegistered(registrationId) {
             return AuthService.sendRegistrationInfo(registrationId)
                 .then(function (result) {
                     $log.log('RegistrationId was successfully saved.');
                 }, function (err) {
                     $log.error('RegistrationId was not saved.');
-                    // todo: show something like error dialog
+                    $cordovaDialogs.alert('Internal error. Please check your internet connection.', 'Error', 'Exit')
+                        .then(function () {
+                            ionic.Platform.exitApp();
+                        });
                 });
         }
 
@@ -48,7 +65,10 @@
                 .then(function (result) {
                     $http.defaults.headers.common['User-Key'] = result.key;
                 }, function (err) {
-                    // todo: show something like error dialog
+                    $cordovaDialogs.alert('Internal error. Please check your internet connection.', 'Error', 'Exit')
+                        .then(function () {
+                            ionic.Platform.exitApp();
+                        });
                 });
         }
 
@@ -63,6 +83,20 @@
                     $state.go('word', {name: state.current.name});
                 });
             });
+        }
+
+        function _onBackButtonPressed(event) {
+            if (backButtonPressed) {
+                clearTimeout(backButtonTimer);
+                ionic.Platform.exitApp();
+            } else {
+                backButtonPressed = true;
+                $cordovaToast.showShortBottom('Press one more time to exit...');
+                backButtonTimer = setTimeout(function () {
+                    backButtonPressed = false;
+                    backButtonTimer = null;
+                }, 1000);
+            }
         }
     }
 })();

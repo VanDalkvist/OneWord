@@ -24,18 +24,22 @@ function Storage(db) {
     var wordsCollection = db.collection('words');
     var usersCollection = db.collection('users');
 
-    this.getWord = _getWord;
-    this.getUser = _getUser;
-    this.saveUser = _createUser;
-    this.updateUser = _updateUser;
+    var storage = this;
+
+    storage.getWord = _getWord;
+    storage.getUser = _getUser;
+    storage.saveUser = _createUser;
+    storage.updateUser = _updateUser;
 
     function _getWord(userId) {
-        return _getNextWordNumber(userId).then(function (wordNumber) {
-            // todo: rewrite to NotFound error
-            if (!_.isNumber(wordNumber) && _.isEmpty(wordNumber)) return null;
+        return _getNextWordNumber(userId)
+            .then(function (wordNumber) {
+                // todo: rewrite to NotFound error
+                if (!_.isNumber(wordNumber) && _.isEmpty(wordNumber)) return null;
 
-            return _findWord(wordNumber);
-        });
+                return wordNumber;
+            })
+            .then(_findWord);
     }
 
     function _getUser(userId) {
@@ -53,7 +57,8 @@ function Storage(db) {
     function _createUser(userId, regId) {
         var deferred = Q.defer();
 
-        var userModel = {userId: userId, word: {number: 0}, regId: regId};
+        var now = new Date();
+        var userModel = {userId: userId, word: {number: 0}, regId: regId, lastModified: now, registered: now};
         usersCollection.insertOne(userModel, function (err, res) {
             if (err) return deferred.reject(new Error("Cannot save user with id: '%s'", userId));
             deferred.resolve({userId: userId});
@@ -66,7 +71,8 @@ function Storage(db) {
         var deferred = Q.defer();
 
         var filterModel = {userId: userId};
-        var updateModel = {$set: {regId: regId}};
+        var now = new Date();
+        var updateModel = {$set: {regId: regId, lastModified: now}};
         usersCollection.updateOne(filterModel, updateModel, function (err, res) {
             if (err) return deferred.reject(new Error("Cannot save user with id: '%s'", userId));
             deferred.resolve(filterModel);
@@ -94,7 +100,8 @@ function Storage(db) {
         var deferred = Q.defer();
 
         var find = {userId: userId, 'word.number': {'$lt': max}};
-        var update = {$inc: {'word.number': 1}};
+        var now = new Date();
+        var update = {$inc: {'word.number': 1}, $set: {lastModified: now}};
         usersCollection.findOneAndUpdate(find, update, function (err, res) {
             if (err) return deferred.reject(new Error("Cannot get user with id: '%s'", userId));
 

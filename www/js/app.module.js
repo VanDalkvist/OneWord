@@ -3,7 +3,7 @@
     'use strict';
 
     var app = angular.module('one-word', [
-        'ionic', 'ui.router',
+        'ionic', 'ui.router', 'ngCordova',
         'one-word.settings', 'one-word.words', 'one-word.core'
     ]);
 

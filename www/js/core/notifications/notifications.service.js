@@ -27,7 +27,8 @@
         // private functions
 
         function _init() {
-            $window.cordova.plugins.notification.local.on('schedule', _setSchedule);
+            var localNotificationsPlugin = $window.cordova.plugins.notification.local;
+            localNotificationsPlugin && (localNotificationsPlugin.on('schedule', _setSchedule));
         }
 
         function _setSchedule(notification) {
@@ -52,9 +53,9 @@
             });
 
             $ionicPlatform.ready(function () {
-                $window.cordova.plugins.notification.local.schedule(notifications);
-
-                $window.cordova.plugins.notification.local.on('click', function (notification) {
+                var localNotifications = $window.cordova.plugins.notification.local;
+                //localNotifications.schedule(notifications); // todo
+                localNotifications.on('click', function (notification) {
                     clickHandler(notification.title);
                 });
             });

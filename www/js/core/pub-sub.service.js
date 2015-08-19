@@ -4,9 +4,9 @@
 
     angular.module('one-word.core').service('PubSub', Service);
 
-    Service.$inject = ['_'];
+    Service.$inject = ['$log', '_'];
 
-    function Service(_) {
+    function Service($log, _) {
 
         // initialization
 
@@ -24,6 +24,8 @@
             var eventObject = events[event];
             if (!eventObject) return;
 
+            $log.log("Event '" + event + "' was published.");
+
             _.each(eventObject.subscribers, function (subscriber) {
                 subscriber(data);
             });
@@ -35,12 +37,14 @@
             }
 
             events[event].subscribers.push(subscriber);
+            $log.log("Subscription to event '" + event + "' was added.");
         }
 
         function _unsubscribe(event, toUnsubscribe) {
             _.remove(events[event].subscribers, function (subscriber) {
                 return toUnsubscribe === subscriber;
             });
+            $log.log("Subscription to event '" + event + "' was removed.");
         }
     }
 })();
