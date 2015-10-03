@@ -13,6 +13,7 @@
 * Download Apache Ant -  http://mirror.tcpdiag.net/apache//ant/binaries/apache-ant-1.9.4-bin.zip . Copy it to C:\Program Files.
 * Ant 'bin/' folder => PATH
 * 'adt-bundle/sdk/platform-tools/' 'adt-bundle/sdk/tools/' => PATH
+
 =======
 
 #Build
