@@ -4,11 +4,12 @@ var childProcess = require('child_process');
 
 // exports
 
+// todo: move version of VS to ENV.
 var commands = [
-    {text: 'npm i --msvs-version=2013', name: 'app dev dependencies'},
+    {text: 'npm i --msvs-version=2015', name: 'app dev dependencies'},
     {text: 'installation\\npm-i-globally bower && bower i', name: 'app client dependencies'},
     {text: 'installation\\npm-i-globally gulp', name: 'gulp'},
-    {text: 'cd server && npm i --msvs-version=2013 && cd ../', name: 'server node dependencies'},
+    {text: 'cd server && npm i --msvs-version=2015 && cd ../', name: 'server node dependencies'},
     {text: 'installation\\npm-i-globally cordova && installation\\npm-i-globally ionic && ionic state restore --plugins', name: 'ionic'}
 ];
 

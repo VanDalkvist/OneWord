@@ -19,6 +19,7 @@ var paths = {
 };
 
 var server = require('gulp-server-livereload');
+var pkg = require('./package.json');
 
 // gulp tasks
 
@@ -71,8 +72,6 @@ gulp.task('git-check', function (done) {
     done();
 });
 
-gulp.task('plugins', function (done) {
-    cordova.plugins('add', require('./plugins')).then(function () {
-        done();
-    });
+gulp.task('plugins', function () {
+    return cordova.plugins('add', pkg.cordovaPlugins);
 });

@@ -26,10 +26,7 @@
     "com.ionic.keyboard",
     "de.appplant.cordova.plugin.local-notification",
     "com.clone.phonegap.plugins.pushplugin",
-    {
-      "locator": "https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin.git",
-      "id": "nl.x-services.plugins.toast"
-    }
+    "cordova-plugin-x-toast"
   ],
   "cordovaPlatforms": [
     "android"
